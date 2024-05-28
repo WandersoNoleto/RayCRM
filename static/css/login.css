@@ -1,0 +1,39 @@
+body {
+  background-color: #E5E7ED;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.login-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-card-image {
+  background-color: #06005a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 4rem;
+}
+
+.login-card-image img {
+  width: 100%;
+  height: auto;
+
+}
+
+.card-body {
+  padding: 6rem;
+}
+
+.card-title {
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
