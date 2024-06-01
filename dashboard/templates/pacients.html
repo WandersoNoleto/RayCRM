@@ -104,37 +104,32 @@
                         <tr>
                             <th>Nome</th>
                             <th>Telefone</th>
-                            <th>Email</th>
                             <th>Endereço</th>
-                            <th class="text-center">Ações</th>
+                            <th>Utlima Consulta</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for contact in contacts %}
+                        {% for patient in patients %}
                         <tr>
                             <td>
                                 <div class="flex w-max items-center">
-                                    <div class="flex-none mr-3">
-                                        <div class="p-1 bg-white-dark/30 rounded-full">
-                                            <img class="h-8 w-8 rounded-full object-cover" src="assets/images/user-profile.jpeg" alt="Profile Picture"/>
-                                        </div>
-                                    </div>
                                     <div class="grid h-8 w-8 place-content-center rounded-full bg-primary text-sm font-semibold text-white ltr:mr-2 rtl:ml-2">
-                                        {{ contact.name|slice:":1" }}{{ contact.name.split|slice:"1:2"|join:""|default:"" }}
+                                        {{ patient.name|slice:":1" }}{{ patient.name.split|slice:"1:2"|join:""|default:"" }}
                                     </div>
-                                    <div>{{ contact.name }}</div>
+                                    <div>{{ patient.name }}</div>
                                 </div>
                             </td>
-                            <td>{{ contact.email }}</td>
-                            <td class="whitespace-nowrap">{{ contact.location }}</td>
-                            <td class="whitespace-nowrap">{{ contact.phone }}</td>
+                            <td class="whitespace-nowrap">{{ patient.formatted_phone }}</td>
+                            <td class="whitespace-nowrap">{{ patient.address }}</td>
+                            <td class="whitespace-nowrap">{{ patient.last_appointment }}</td>
                             <td>
-                                <div class="flex items-center justify-center gap-4">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" @click="editUser(contact)">
-                                        Edit
+                                <div class="text-center flex  justify-center ">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" @click="editUser(patient)">
+                                        Editar
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" @click="deleteUser(contact)">
-                                        Delete
+                                    <button type="button" class="btn btn-sm btn-outline-danger" @click="deleteUser(patient)">
+                                        Apagar
                                     </button>
                                 </div>
                             </td>
