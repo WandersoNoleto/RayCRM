@@ -4,6 +4,7 @@ from users.models import Clinic
 class Patient(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
+    birth_date = models.DateField()
     address = models.CharField(max_length=255)
     last_appointment = models.DateField(null=True, blank=True)
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
