@@ -1,0 +1,12 @@
+.table-container {
+    max-height: 42rem;
+    overflow-y: auto;  
+}
+
+.table-responsive {
+    overflow-x: auto;  
+}
+
+.table {
+    width: 100%;       
+}
