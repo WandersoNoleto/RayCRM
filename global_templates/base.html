@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>RayCRM | Home</title>
+        <title>{% block "title" %}{% endblock "title" %} | CliOlhos</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/x-icon" href="{% static "images/logo-ray-crm-circle-light.svg" %}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,7 +46,6 @@
                         <div class="flex items-center justify-between px-4 py-3">
                             <a href="index.html" class="main-logo flex shrink-0 items-center">
                                 <img class="logo-dash-icon" src="{% static "images/logo-Cliolhos.png" %}" alt="image"> 
-                                <span class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline"></span>
                             </a>
                             <a href="javascript:;" class="collapse-icon flex h-8 w-8 items-center rounded-full transition duration-300 hover:bg-gray-500/10 rtl:rotate-180 dark:text-white-light dark:hover:bg-dark-light/10" @click="$store.app.toggleSidebar()">
                                 <svg class="m-auto h-5 w-5" width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +54,7 @@
                                 </svg>
                             </a>
                         </div>
-                        <ul class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold" x-data="{ activeDropdown: 'dashboard' }">
+                        <ul class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold">
                            
 
                             <h2 class="-mx-4 mb-1 flex items-center bg-white-light/30 px-7 py-3 font-extrabold uppercase dark:bg-dark dark:bg-opacity-[0.08]">
@@ -68,7 +67,7 @@
                             <li class="nav-item">
                                 <ul>
                                     <li class="nav-item">
-                                        <a href="apps-chat.html" class="group">
+                                        <a href="{% url "home" %}" class="group {% if request.path == '/' %} active {% endif %}">
                                             <div class="flex items-center">
                                                 <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
                                                     <path opacity="0.5" d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z" fill="currentColor"></path>
@@ -79,7 +78,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{% url "view_patients" %}" class="group">
+                                        <a href="{% url "view_patients" %}" class="group {% if request.path == '/patients/' %} active {% endif %}">
                                             <div class="flex items-center">
                                                 <svg class="shrink-0 group-hover:!text-primary" width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <circle opacity="0.5" cx="15" cy="6" r="3" fill="currentColor"></circle>
@@ -92,7 +91,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="apps-mailbox.html" class="group">
+                                        <a href="" class="group">
                                             <div class="flex items-center">
                                                 <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"></circle>
@@ -102,7 +101,7 @@
                                             </div>
                                         </a>
                                     </li>
-                        </ul>
+                            </ul>
                         </ul>
                     </div>
                 </nav>
@@ -116,8 +115,8 @@
                         <div class="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-[#0e1726]">
                             <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
                                 <a href="index.html" class="main-logo flex shrink-0 items-center">
-                                    <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="{% static "images/logo.png" %}" alt="image">
-                                    <span class="hidden align-middle text-2xl font-semibold transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline">Ray CRM</span>
+                                    <img class="logo-dash-icon" src="{% static "images/logo-Cliolhos.png" %}" alt="image"> 
+                                    
                                 </a>
 
                                 <a href="javascript:;" class="collapse-icon flex flex-none rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary ltr:ml-2 rtl:mr-2 dark:bg-dark/40 dark:text-[#d0d2d6] dark:hover:bg-dark/60 dark:hover:text-primary lg:hidden" @click="$store.app.toggleSidebar()">
@@ -177,75 +176,6 @@
                                     </a>
                                 </div>
 
-                                <div class="dropdown" x-data="dropdown" @click.outside="open = false">
-                                    <a href="javascript:;" class="relative block rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60" @click="toggle">
-                                        <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z" stroke="currentColor" stroke-width="1.5"></path>
-                                            <path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                            <path d="M12 6V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                        </svg>
-
-                                        <span class="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
-                                            <span class="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
-                                            <span class="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
-                                        </span>
-                                    </a>
-                                    <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms="" class="top-11 w-[300px] divide-y !py-0 text-dark ltr:-right-2 rtl:-left-2 dark:divide-white/10 dark:text-white-dark sm:w-[350px]">
-                                        <li>
-                                            <div class="flex items-center justify-between px-4 py-2 font-semibold hover:!bg-transparent">
-                                                <h4 class="text-lg">Notificações</h4>
-                                                <template x-if="notifications.length">
-                                                    <span class="badge bg-primary/80" x-text="notifications.length + 'New'"></span>
-                                                </template>
-                                            </div>
-                                        </li>
-                                        <template x-for="notification in notifications">
-                                            <li class="dark:text-white-light/90">
-                                                <div class="group flex items-center px-4 py-2" @click.self="toggle">
-                                                    <div class="grid place-content-center rounded">
-                                                        <div class="relative h-12 w-12">
-                                                            <img class="h-12 w-12 rounded-full object-cover" :src="`{% static "images/${notification.profile}" %}`" alt="image">
-                                                            <span class="absolute bottom-0 right-[6px] block h-2 w-2 rounded-full bg-success"></span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex flex-auto ltr:pl-3 rtl:pr-3">
-                                                        <div class="ltr:pr-3 rtl:pl-3">
-                                                            <h6 x-html="notification.message"></h6>
-                                                            <span class="block text-xs font-normal dark:text-gray-500" x-text="notification.time"></span>
-                                                        </div>
-                                                        <button type="button" class="text-neutral-300 opacity-0 hover:text-danger group-hover:opacity-100 ltr:ml-auto rtl:mr-auto" @click="removeNotification(notification.id)">
-                                                            <svg width="20" height="20" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"></circle>
-                                                                <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </template>
-                                        <template x-if="notifications.length">
-                                            <li>
-                                                <div class="p-4">
-                                                    <button class="btn btn-primary btn-small block w-full" @click="toggle">Ver todas as notificações</button>
-                                                </div>
-                                            </li>
-                                        </template>
-                                        <template x-if="!notifications.length">
-                                            <li>
-                                                <div class="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
-                                                    <div class="mx-auto mb-4 rounded-full text-primary ring-4 ring-primary/30">
-                                                        <svg width="40" height="40" viewbox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <path opacity="0.5" d="M20 10C20 4.47715 15.5228 0 10 0C4.47715 0 0 4.47715 0 10C0 15.5228 4.47715 20 10 20C15.5228 20 20 15.5228 20 10Z" fill="currentColor"></path>
-                                                            <path d="M10 4.25C10.4142 4.25 10.75 4.58579 10.75 5V11C10.75 11.4142 10.4142 11.75 10 11.75C9.58579 11.75 9.25 11.4142 9.25 11V5C9.25 4.58579 9.58579 4.25 10 4.25Z" fill="currentColor"></path>
-                                                            <path d="M10 15C10.5523 15 11 14.5523 11 14C11 13.4477 10.5523 13 10 13C9.44772 13 9 13.4477 9 14C9 14.5523 9.44772 15 10 15Z" fill="currentColor"></path>
-                                                        </svg>
-                                                    </div>
-                                                    No data available.
-                                                </div>
-                                            </li>
-                                        </template>
-                                    </ul>
-                                </div>
                                 <div class="dropdown flex-shrink-0" x-data="dropdown" @click.outside="open = false">
                                     <a href="javascript:;" class="group relative" @click="toggle()">
                                         <span><img class="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="{% static "images/user-profile.jpeg" %}" alt="image"></span>
