@@ -1,12 +1,13 @@
 ﻿{% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block "title" %}Início{% endblock "title" %}
 
 {% block "content" %}
 <div class="animate__animated p-6" :class="[$store.app.animation]">
     <!-- start main content section -->
 
-    <div x-data="calendar">
+    <div >
         <div class="panel">
             <div class="mb-5">
                 <div class="mb-4 flex flex-col items-center justify-center sm:flex-row sm:justify-between">
@@ -90,7 +91,47 @@
                         </div>
                     </div>
                 </div>
-                <div class="calendar-wrapper" id="calendar"></div>
+                <div class="table-responsive">
+                    <table class="table-hover">
+                        <thead>
+                            <tr class="!bg-transparent dark:!bg-transparent">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for time in 8|times:15 %}
+                                    <tr>
+                                        <th class="bg-white">{{ time }}</th>
+                                        <td class="bg-grey" colspan="5">
+                                            <button @click="editEvent()" class="text-blue-500 flex items-center justify-center w-full h-full">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                            {% endfor %}
+                            <tr>
+                                <th class="bg-white">20:00</th>
+                                <td class="bg-grey" colspan="4">
+                                    <button @click="editEvent()" class="text-blue-500 flex items-center justify-center w-full h-full">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </div>
