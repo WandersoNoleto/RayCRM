@@ -1,15 +1,25 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Patient
+from .models import Patient, Appointment, NextConsultDate
 from django.contrib import messages
 from django.http import JsonResponse
 import json
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 
 @login_required
 def home(request):
-    return render(request, 'index.html')
+    next_consult_date = NextConsultDate.objects.all().first()
+    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
+    appointments = Appointment.objects.filter
+
+    context = {
+        'patients': patients,
+        'next_consult_date': next_consult_date,
+        'appointments': appointments
+    }
+    return render(request, 'index.html', context=context)
 
 @login_required
 def view_patients(request):
@@ -85,3 +95,31 @@ def delete_patient(request, patient_id):
     patient.delete()
 
     return JsonResponse({'status': 'success'})
+
+@login_required
+def save_new_consult_date(request):
+    if request.method == "POST":
+        new_date = request.POST.get("nextConsultDate")
+
+        next_date = NextConsultDate(date=new_date)
+        next_date.save()
+
+        return redirect('home')
+    
+@login_required
+def add_appointment(request):
+    if request.method == "POST":
+        patient_id = request.POST.get("patient")
+        date = request.POST.get("date")
+        hour = request.POST.get("hour")
+        minute = request.POST.get("minute")
+
+        patient = get_object_or_404(Patient, id=patient_id)
+
+        time_str = f"{hour}:{minute}"
+        time_obj = datetime.strptime(time_str, "%H:%M").time()
+
+        appointment = Appointment(patient=patient, appointment_date=date, appointment_time=time_obj)
+        appointment.save()
+
+        return redirect('home')

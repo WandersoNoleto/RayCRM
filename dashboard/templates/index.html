@@ -1,89 +1,113 @@
 ﻿{% extends "base.html" %}
 {% load static %}
 {% load custom_filters %}
+
+{% block "head" %}
+    <link rel="stylesheet" href="{% static "css/dashboard/index-view.css" %}">
+{% endblock "head" %}
+
 {% block "title" %}Início{% endblock "title" %}
 
 {% block "content" %}
 <div class="animate__animated p-6" :class="[$store.app.animation]">
     <!-- start main content section -->
-
-    <div >
-        <div class="panel">
+    <div class="flex flex-col gap-2.5 w-full xl:flex-row ">
+        <div class="panel mt-6 xl:mt-0 flex-1">
             <div class="mb-5">
                 <div class="mb-4 flex flex-col items-center justify-center sm:flex-row sm:justify-between">
                     <div class="mb-4 sm:mb-0">
                         <div class="text-center text-lg font-semibold ltr:sm:text-left rtl:sm:text-right">Consultas</div>
                         <div class="mt-2 flex flex-wrap items-center justify-center sm:justify-start">
                             <div class="flex items-center ltr:mr-4 rtl:ml-4">
-                                <div>Proximo dia de consulta: <strong>06/06</strong></div>
+                                <div>Proximo dia de consulta: <strong>{{ next_consult_date.show }}</strong></div>
+                                <button onclick="openNextConsultDateEditModal()" class="ml-2">
+                                    <svg id="editNextConsultDateBtn" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.0671 2.27157C17.5 2.09228 17.9639 2 18.4324 2C18.9009 2 19.3648 2.09228 19.7977 2.27157C20.2305 2.45086 20.6238 2.71365 20.9551 3.04493C21.2864 3.37621 21.5492 3.7695 21.7285 4.20235C21.9077 4.63519 22 5.09911 22 5.56761C22 6.03611 21.9077 6.50003 21.7285 6.93288C21.5492 7.36572 21.2864 7.75901 20.9551 8.09029L20.4369 8.60845L15.3916 3.56308L15.9097 3.04493C16.241 2.71365 16.6343 2.45086 17.0671 2.27157Z" fill="#000000"/>
+                                        <path d="M13.9774 4.9773L3.6546 15.3001C3.53154 15.4231 3.44273 15.5762 3.39694 15.7441L2.03526 20.7369C1.94084 21.0831 2.03917 21.4534 2.29292 21.7071C2.54667 21.9609 2.91693 22.0592 3.26314 21.9648L8.25597 20.6031C8.42387 20.5573 8.57691 20.4685 8.69996 20.3454L19.0227 10.0227L13.9774 4.9773Z" fill="#000000"/>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" id="editNextConsultDateModal">
+                            <div class="flex min-h-screen items-center justify-center px-4">
+                                <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
+                                    <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Editar Próxima Consulta</h3>
+                                    <div class="p-5">
+                                        <form method="post" action="{% url "save_next_consult_date" %}">
+                                            {% csrf_token %}
+                                            <div class="mb-5">
+                                                <label for="nextConsultDate">Nova Data:</label>
+                                                <input name="nextConsultDate" id="nextConsultDate" type="date" name="nextConsultDate" class="form-input" placeholder="" required>
+                                                <div class="mt-2 text-danger" id="nextConsultDateErr"></div>
+                                            </div>
+                                            
+                                            <div class="mt-8 flex items-center justify-end">
+                                                <button type="button" class="btn btn-outline-danger" onclick="closeNextConsultDateModal()">
+                                                    Cancelar
+                                                </button>
+                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Salvar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" @click="editEvent()">
+                    <button type="button" class="btn btn-primary" onclick="editEvent()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 ltr:mr-2 rtl:ml-2">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                         Agendar 
                     </button>
-                    <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" :class="isAddEventModal && '!block'">
-                        <div class="flex min-h-screen items-center justify-center px-4" @click.self="isAddEventModal = false">
-                            <div x-show="isAddEventModal" x-transition="" x-transition.duration.300="" class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
-                                <button type="button" class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4" @click="isAddEventModal = false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                    </svg>
-                                </button>
-                                <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]" x-text="params.id ? 'Edit Event' : 'Add Event'"></h3>
+                    <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" id="addEventModal">
+                        <div class="flex min-h-screen items-center justify-center px-4">
+                            <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
+                                <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Agendar Consulta</h3>
                                 <div class="p-5">
-                                    <form @submit.prevent="saveEvent">
+                                    <form method="post" action="{% url "add_appointment" %}">
+                                        {% csrf_token %}
                                         <div class="mb-5">
-                                            <label for="title">Event Title :</label>
-                                            <input id="title" type="text" name="title" id="title" class="form-input" placeholder="Enter Event Title" x-model="params.title" required="">
-                                            <div class="mt-2 text-danger" id="titleErr"></div>
+                                            <label for="patient">Paciente:</label>
+                                            <select name="patient" id="patient" name="patient" class="form-select" required>
+                                                <option value="" selected disabled>Selecione um paciente</option>
+                                                {% for patient in patients %}
+                                                    <option value="{{ patient.id }}" {% if patient.id == event.patient_id %}selected{% endif %}>{{ patient.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="mt-2 text-danger" id="patientErr"></div>
                                         </div>
-
+                    
                                         <div class="mb-5">
-                                            <label for="dateStart">From :</label>
-                                            <input id="dateStart" type="datetime-local" name="start" id="start" class="form-input" placeholder="Event Start Date" x-model="params.start" :min="minStartDate" @change="startDateChange($event)" required="">
+                                            <label for="dateStart">Data: </label>
+                                            <input name="date" id="dateStart" type="date" name="start" class="form-input" placeholder="" value="{{ event.start }}" required>
                                             <div class="mt-2 text-danger" id="startDateErr"></div>
                                         </div>
-                                        <div class="mb-5">
-                                            <label for="dateEnd">To :</label>
-                                            <input id="dateEnd" type="datetime-local" name="end" id="end" class="form-input" placeholder="Event End Date" x-model="params.end" :min="minEndDate" required="">
-                                            <div class="mt-2 text-danger" id="endDateErr"></div>
-                                        </div>
-                                        <div class="mb-5">
-                                            <label for="description">Event Description :</label>
-                                            <textarea id="description" name="description" id="description" class="form-textarea min-h-[130px]" placeholder="Enter Event Description" x-model="params.description"></textarea>
-                                        </div>
-                                        <div class="mb-5">
-                                            <label>Badge:</label>
-                                            <div class="mt-3">
-                                                <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
-                                                    <input type="radio" class="form-radio" name="badge" value="primary" x-model="params.type">
-                                                    <span class="ltr:pl-2 rtl:pr-2">Work</span>
-                                                </label>
-                                                <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
-                                                    <input type="radio" class="form-radio text-info" name="badge" value="info" x-model="params.type">
-                                                    <span class="ltr:pl-2 rtl:pr-2">Travel</span>
-                                                </label>
-                                                <label class="inline-flex cursor-pointer ltr:mr-3 rtl:ml-3">
-                                                    <input type="radio" class="form-radio text-success" name="badge" value="success" x-model="params.type">
-                                                    <span class="ltr:pl-2 rtl:pr-2">Personal</span>
-                                                </label>
-                                                <label class="inline-flex cursor-pointer">
-                                                    <input type="radio" class="form-radio text-danger" name="badge" value="danger" x-model="params.type">
-                                                    <span class="ltr:pl-2 rtl:pr-2">Important</span>
-                                                </label>
+                                        <div class="mb-5 flex items-center">
+                                            <label clas="w-20" for="hour">Horário: </label>
+                                            <div class="flex items-center">
+                                                <select name="hour" id="hour" name="hour" class="form-select cursor-pointer w-20" required>
+                                                    <option value="" selected disabled>hora</option>
+                                                    {% for hour in 8|num_range:21 %}
+                                                        <option value="{{ hour }}">{{ hour }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <span>:</span>
+                                                <select name="minute" id="minute" name="minute" class="form-select cursor-pointer w-32" required>
+                                                    <option value="">minutos</option>
+                                                    <option value="00">00</option>
+                                                    <option value="15">15</option>
+                                                    <option value="30">30</option>
+                                                    <option value="45">45</option>
+                                                </select>
                                             </div>
+                                            <div class="mt-2 text-danger" id="timeErr"></div>
                                         </div>
+                                        
                                         <div class="mt-8 flex items-center justify-end">
-                                            <button type="button" class="btn btn-outline-danger" @click="isAddEventModal = false">
-                                                Cancel
+                                            <button type="button" class="btn btn-outline-danger" onclick="closeModal()">
+                                                Cancelar
                                             </button>
-                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4" x-text="params.id ? 'Update Event' : 'Create Event'"></button>
+                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Agendar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -91,10 +115,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table-hover">
+                <div class="table-responsive table-container">
+                    <table class="table-hover table-bordered">
                         <thead>
                             <tr class="!bg-transparent dark:!bg-transparent">
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -106,26 +133,23 @@
                         <tbody>
                             {% for time in 8|times:15 %}
                                     <tr>
-                                        <th class="bg-white">{{ time }}</th>
-                                        <td class="bg-grey" colspan="5">
+                                        <th >{{ time }}</th>
+                                        <td  colspan="8">
                                             <button @click="editEvent()" class="text-blue-500 flex items-center justify-center w-full h-full">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                                </svg>
+                                                {% for appointment in appointments %}
+                                                    {% if appointment.appointment_date == next_consult_date.date and appointment.appointment_time|format_time == time %}
+                                                        {{ appointment.patient.name }}
+                                                    {% else %}
+
+                                                    {% endif %}
+                                                {% endfor %}          
                                             </button>
                                         </td>
                                     </tr>
                             {% endfor %}
                             <tr>
-                                <th class="bg-white">20:00</th>
-                                <td class="bg-grey" colspan="4">
-                                    <button @click="editEvent()" class="text-blue-500 flex items-center justify-center w-full h-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                        </svg>
-                                    </button>
+                                <th >20:00</th>
+                                <td  colspan="8">
                                 </td>
                             </tr>
                         </tbody>
@@ -134,12 +158,76 @@
                 
             </div>
         </div>
+        <div class="mt-6 xl:mt-0 ">
+            <div class="panel mb-5 xl:w-full">
+                <div>
+                    <label for="currency">Paciente</label>
+                    <input id="tax" type="number" name="tax" class="form-input" placeholder="Nnehum paciente" x-model="tax">
+                </div>
+                <div class="mt-4">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                            <label for="tax">Tax(%) </label>
+                            <input id="tax" type="number" name="tax" class="form-input" placeholder="Tax" x-model="tax">
+                        </div>
+                        <div>
+                            <label for="discount">Discount(%) </label>
+                            <input id="discount" type="number" name="discount" class="form-input" placeholder="Discount" x-model="discount">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div>
+                        <label for="shipping-charge">Shipping Charge($) </label>
+                        <input id="shipping-charge" type="number" name="shipping-charge" class="form-input" placeholder="Shipping Charge" x-model="shippingCharge">
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="payment-method">Accept Payment Via</label>
+                    <select id="payment-method" name="payment-method" class="form-select" x-model="paymentMethod">
+                        <option value="">Select Payment</option>
+                        <option value="bank">Bank Account</option>
+                        <option value="paypal">Paypal</option>
+                        <option value="upi">UPI Transfer</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-success w-full gap-2">
+                    <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
+                        <path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z" stroke="currentColor" stroke-width="1.5"></path>
+                        <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" stroke-width="1.5"></path>
+                        <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                    </svg>
+                    Save
+                </button>
+            </div>
+        </div>
     </div>
-    <!-- end main content section -->
-
+        <!-- end main content section -->
 </div>
 
 
+<script>
+    function closeModal() {
+        document.getElementById('addEventModal').classList.add('hidden');
+    }
+    function openModal() {
+        document.getElementById('addEventModal').classList.remove('hidden');
+    }
+    function editEvent() {
+        openModal();
+    }
+
+    function openNextConsultDateEditModal() {
+        var modal = document.getElementById('editNextConsultDateModal');
+        modal.classList.remove('hidden');
+    }
+    
+    function closeNextConsultDateModal() {
+        var modal = document.getElementById('editNextConsultDateModal');
+        modal.classList.add('hidden');
+    }
+    
+</script>
 
    
 {% endblock "content" %}

@@ -14,3 +14,11 @@ def times(start, interval=1):
         hour += 1
         minute = 0
     return times_list
+
+@register.filter
+def num_range(start, end, step=1):
+    return range(start, end, step)
+
+@register.filter
+def format_time(time_obj):
+    return time_obj.strftime('%H:%M')
