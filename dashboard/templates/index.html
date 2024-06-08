@@ -9,9 +9,13 @@
 {% block "title" %}Início{% endblock "title" %}
 
 {% block "content" %}
-{% if error %}
-    <div class="alert alert-danger">
-        {{ error }}
+{% if messages %}
+    <div class="messages-center" id="messageContainer">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
     </div>
 {% endif %}
 <div class="animate__animated p-6" :class="[$store.app.animation]">
@@ -37,11 +41,11 @@
                                 <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
                                     <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Editar Próxima Consulta</h3>
                                     <div class="p-5">
-                                        <form method="post" action="{% url "save_next_consult_date" %}">
+                                        <form id="editNextConsultDateForm" method="post" action="{% url "save_next_consult_date" %}">
                                             {% csrf_token %}
                                             <div class="mb-5">
                                                 <label for="nextConsultDate">Nova Data:</label>
-                                                <input name="nextConsultDate" id="nextConsultDate" type="date" name="nextConsultDate" class="form-input" placeholder="" required>
+                                                <input name="nextConsultDate" id="nextConsultDate" type="date" class="form-input" placeholder="" required>
                                                 <div class="mt-2 text-danger" id="nextConsultDateErr"></div>
                                             </div>
                                             
@@ -49,13 +53,14 @@
                                                 <button type="button" class="btn btn-outline-danger" onclick="closeNextConsultDateModal()">
                                                     Cancelar
                                                 </button>
-                                                <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Salvar</button>
+                                                <button type="button" id="submitEditNextConsultDateForm" class="btn btn-primary ltr:ml-4 rtl:mr-4">Salvar</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     <button type="button" class="btn btn-appointment" onclick="editEvent()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 ltr:mr-2 rtl:ml-2">
@@ -69,7 +74,7 @@
                             <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
                                 <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Agendar Consulta</h3>
                                 <div class="p-5">
-                                    <form method="post" action="{% url "add_appointment" %}">
+                                    <form id="appointmentForm" method="post" action="{% url "add_appointment" %}">
                                         {% csrf_token %}
                                         <div class="mb-5">
                                             <label for="patient">Paciente:</label>
@@ -84,21 +89,19 @@
                     
                                         <div class="mb-5">
                                             <label for="dateStart">Data: </label>
-                                            <input name="date" id="dateStart" type="date" name="start" class="form-input" placeholder="" value="{{ event.start }}" required>
+                                            <input name="date" id="dateStart" type="date" class="form-input" placeholder="" value="{{ event.start }}" required>
                                             <div class="mt-2 text-danger" id="startDateErr"></div>
                                         </div>
                                         <div class="mb-5 flex items-center">
-                                            <label clas="w-20" for="hour">Horário: </label>
+                                            <label class="w-20" for="hour">Horário: </label>
                                             <div class="flex items-center">
-                                                <select name="hour" id="hour" name="hour" class="form-select cursor-pointer w-20" required>
-                                                    <option value="" selected disabled>hora</option>
+                                                <select name="hour" id="hour" class="form-select cursor-pointer w-20" required>
                                                     {% for hour in 8|num_range:21 %}
                                                         <option value="{{ hour }}">{{ hour }}</option>
                                                     {% endfor %}
                                                 </select>
                                                 <span>:</span>
-                                                <select name="minute" id="minute" name="minute" class="form-select cursor-pointer w-32" required>
-                                                    <option value="">minutos</option>
+                                                <select name="minute" id="minute" class="form-select cursor-pointer w-32" required>
                                                     <option value="00">00</option>
                                                     <option value="15">15</option>
                                                     <option value="30">30</option>
@@ -112,13 +115,14 @@
                                             <button type="button" class="btn btn-outline-danger" onclick="closeModal()">
                                                 Cancelar
                                             </button>
-                                            <button type="submit" class="btn btn-appointment ltr:ml-4 rtl:mr-4">Agendar</button>
+                                            <button type="button" id="submitAppointmentForm" class="btn btn-appointment ltr:ml-4 rtl:mr-4">Agendar</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="table-responsive table-container">
                     <table class="table-hover table-bordered table-striped">
@@ -237,19 +241,19 @@
                                     </tr>
                                 {% else %}
                                     {% for se_appointment in se_appointments %}
-                                        <tr>
-                                            <td class="text-center appointment-date">{{ se_appointment.appointment_date|date:"d/m/y" }}</td>
-                                            <td class="text-center appointment-time">{{ se_appointment.appointment_time|time:"H:i"  }}</td>
-                                            <td class="patient-name">{{ se_appointment.patient.name }}</td>
-                                            <td class="text-center">
-                                                <button onclick="showCancelAlert({{ se_appointment.id }})" class="cancel-appointment">
-                                                    <!-- Ícone de exclusão -->
-                                                    <svg class="btn-svg" fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z"/>
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td class="text-center appointment-date">{{ se_appointment.appointment_date|date:"d/m/y" }}</td>
+                                        <td class="text-center appointment-time">{{ se_appointment.appointment_time|time:"H:i"  }}</td>
+                                        <td class="patient-name">{{ se_appointment.patient.name }}</td>
+                                        <td class="text-center">
+                                            <button onclick="showCancelAlert({{ se_appointment.id }})" class="cancel-appointment">
+                                                <!-- Ícone de exclusão -->
+                                                <svg class="btn-svg" fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
                                     {% endfor %}
                                 {% endif %}
                             </tbody>

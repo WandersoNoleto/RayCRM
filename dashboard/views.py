@@ -120,6 +120,10 @@ def add_appointment(request):
         time_str = f"{hour}:{minute}"
         time_obj = datetime.strptime(time_str, "%H:%M").time()
 
+        if Appointment.objects.filter(appointment_date=date, appointment_time=time_obj).exists():
+            messages.error(request, "Não foi possível! Já existe um agendamento para esse horário, tente novamente")
+            return redirect('home') 
+
         appointment = Appointment(patient=patient, appointment_date=date, appointment_time=time_obj)
         appointment.save()
 

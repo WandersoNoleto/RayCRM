@@ -62,3 +62,56 @@ async function showCancelAlert(appointmentId) {
     };
 }
 
+window.onload = function() {
+    var messageContainer = document.getElementById('messageContainer');
+    if (messageContainer) {
+        setTimeout(function() {
+            messageContainer.style.display = 'none';
+        }, 5000);
+    }
+};
+
+document.getElementById('submitAppointmentForm').addEventListener('click', function(event) {
+    var dateInput = document.getElementById('dateStart').value;
+    var date = new Date(dateInput);
+
+    if (date.getDay() !== 2) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Dia não é uma quarta-feira',
+            text: 'Você deseja continuar com esta data?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('appointmentForm').submit();
+            }
+        });
+    } else {
+        document.getElementById('appointmentForm').submit();
+    }
+});
+
+document.getElementById('submitEditNextConsultDateForm').addEventListener('click', function(event) {
+    var dateInput = document.getElementById('nextConsultDate').value;
+    var date = new Date(dateInput);
+
+    if (date.getDay() !== 2) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Dia não é uma quarta-feira',
+            text: 'Você deseja continuar com esta data?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('editNextConsultDateForm').submit();
+            }
+        });
+    } else {
+        document.getElementById('editNextConsultDateForm').submit();
+    }
+});
+
