@@ -32,6 +32,7 @@
                                 <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
                                     <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Editar Próxima Consulta</h3>
                                     <div class="p-5">
+                                        {% comment %} #TODO: UPDATEORCREATE METHOD {% endcomment %}
                                         <form method="post" action="{% url "save_next_consult_date" %}">
                                             {% csrf_token %}
                                             <div class="mb-5">
@@ -52,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="editEvent()">
+                    <button type="button" class="btn btn-appointment" onclick="editEvent()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 ltr:mr-2 rtl:ml-2">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -107,7 +108,7 @@
                                             <button type="button" class="btn btn-outline-danger" onclick="closeModal()">
                                                 Cancelar
                                             </button>
-                                            <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4">Agendar</button>
+                                            <button type="submit" class="btn btn-appointment ltr:ml-4 rtl:mr-4">Agendar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -116,7 +117,7 @@
                     </div>
                 </div>
                 <div class="table-responsive table-container">
-                    <table class="table-hover table-bordered">
+                    <table class="table-hover table-bordered table-striped">
                         <thead>
                             <tr class="!bg-transparent dark:!bg-transparent">
                                 <th></th>
@@ -132,10 +133,10 @@
                         </thead>
                         <tbody>
                             {% for time in 8|times:15 %}
-                                    <tr>
+                                <tr class="{% cycle 'even-row' 'odd-row' %}">
                                         <th >{{ time }}</th>
                                         <td  colspan="8">
-                                            <button @click="editEvent()" class="text-blue-500 flex items-center justify-center w-full h-full">
+                                            <button class="text-blue-500 flex items-center justify-center w-full h-full">
                                                 {% for appointment in appointments %}
                                                     {% if appointment.appointment_date == next_consult_date.date and appointment.appointment_time|format_time == time %}
                                                         {{ appointment.patient.name }}
@@ -159,53 +160,98 @@
             </div>
         </div>
         <div class="mt-6 xl:mt-0 ">
-            <div class="panel mb-5 xl:w-full">
-                <div>
-                    <label for="currency">Paciente</label>
-                    <input id="tax" type="number" name="tax" class="form-input" placeholder="Nnehum paciente" x-model="tax">
-                </div>
-                <div class="mt-4">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <label for="tax">Tax(%) </label>
-                            <input id="tax" type="number" name="tax" class="form-input" placeholder="Tax" x-model="tax">
-                        </div>
-                        <div>
-                            <label for="discount">Discount(%) </label>
-                            <input id="discount" type="number" name="discount" class="form-input" placeholder="Discount" x-model="discount">
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4">
+            <div class="col-md-12">
+                <div class="panel mb-5 xl:w-full">
+                    
                     <div>
-                        <label for="shipping-charge">Shipping Charge($) </label>
-                        <input id="shipping-charge" type="number" name="shipping-charge" class="form-input" placeholder="Shipping Charge" x-model="shippingCharge">
+                        <label for="currency">Paciente</label>
+                        <input id="tax" type="number" name="tax" class="form-input" placeholder="Nnehum paciente" x-model="tax">
+                    </div>
+                    <div class="mt-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="tax">Tax(%) </label>
+                                <input id="tax" type="number" name="tax" class="form-input" placeholder="Tax" x-model="tax">
+                            </div>
+                            <div>
+                                <label for="discount">Discount(%) </label>
+                                <input id="discount" type="number" name="discount" class="form-input" placeholder="Discount" x-model="discount">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div>
+                            <label for="shipping-charge">Shipping Charge($) </label>
+                            <input id="shipping-charge" type="number" name="shipping-charge" class="form-input" placeholder="Shipping Charge" x-model="shippingCharge">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="payment-method">Accept Payment Via</label>
+                        <select id="payment-method" name="payment-method" class="form-select" x-model="paymentMethod">
+                            <option value="">Select Payment</option>
+                            <option value="bank">Bank Account</option>
+                            <option value="paypal">Paypal</option>
+                            <option value="upi">UPI Transfer</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-success w-full gap-2">
+                        <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
+                            <path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z" stroke="currentColor" stroke-width="1.5"></path>
+                            <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" stroke-width="1.5"></path>
+                            <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                        </svg>
+                        Save
+                    </button>
+                </div>
+                <div class="panel mb-5 xl:w-full" id="searchPanel">
+                    <form method="get" action="{% url "search_appointments" %}">
+                        <div class="r">
+                            <h3 class="font-bold text-lg text-center">Procurar atendimento</h3>
+                            <label for="search-date">Por data</label>
+                            <input id="search-date" type="date" name="search-date" class="form-input mb-2" placeholder="Selecionar data">
+                            <label for="search-name">Por nome</label>
+                            <input id="search-name" type="text" name="search-name" class="form-input mb-2" placeholder="Nome do Paciente">
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary w-full gap-2" >
+                                Pesquisar
+                            </button>
+                        </div>
+                    </form>
+                    <div class="mt-4">
+                        <h4>Agendamentos</h4>
+                        <table class="table-hover table-bordered w-full" id="appointmentsTable">
+                            <thead>
+                                <tr class="!bg-transparent dark:!bg-transparent">
+                                    <th>Horário</th>
+                                    <th>Paciente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not se_appointments %}
+                                    <tr >
+                                        <td colspan="2" class="text-center">Nenhum agendamento encontrado</td>
+                                    </tr>
+                                {% else %}
+                                    {% for se_appointment in se_appointments %}
+                                        <tr >
+                                            <td class="text-center">{{se_appointment.appointment_time}}</td>
+                                            <td class="text-center">{{se_appointment.patient.name}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <label for="payment-method">Accept Payment Via</label>
-                    <select id="payment-method" name="payment-method" class="form-select" x-model="paymentMethod">
-                        <option value="">Select Payment</option>
-                        <option value="bank">Bank Account</option>
-                        <option value="paypal">Paypal</option>
-                        <option value="upi">UPI Transfer</option>
-                    </select>
-                </div>
-                <button type="button" class="btn btn-success w-full gap-2">
-                    <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
-                        <path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z" stroke="currentColor" stroke-width="1.5"></path>
-                        <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" stroke-width="1.5"></path>
-                        <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                    </svg>
-                    Save
-                </button>
+                
             </div>
         </div>
     </div>
         <!-- end main content section -->
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     function closeModal() {
         document.getElementById('addEventModal').classList.add('hidden');
@@ -225,7 +271,7 @@
     function closeNextConsultDateModal() {
         var modal = document.getElementById('editNextConsultDateModal');
         modal.classList.add('hidden');
-    }
+    }  
     
 </script>
 
