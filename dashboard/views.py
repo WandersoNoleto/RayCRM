@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Patient, Appointment, NextConsultDate
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
+from django.urls import reverse
 import json
 from django.db.models.functions import Lower
 from datetime import datetime
@@ -130,8 +131,24 @@ def search_appointments(request):
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter
     
-    date = request.GET.get('search-date')
-    se_appointments = Appointment.objects.filter(appointment_date=date)
+    search_date = request.GET.get('search-date')
+    search_name = request.GET.get('search-name')
+    se_appointments = []
+
+    if search_date or search_name:
+        if search_date and search_name:
+            se_appointments = Appointment.objects.filter(
+                appointment_date=search_date,
+                patient__name__icontains=search_name
+            )
+        elif search_date:
+            se_appointments = Appointment.objects.filter(
+                appointment_date=search_date
+            )
+        elif search_name:
+            se_appointments = Appointment.objects.filter(
+                patient__name__icontains=search_name
+            )
 
     context = {
         'patients': patients,
@@ -141,3 +158,10 @@ def search_appointments(request):
     }
 
     return render(request, 'index.html', context=context)
+
+@login_required
+def cancel_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    appointment.delete()
+
+    return JsonResponse({'status': 'success'})

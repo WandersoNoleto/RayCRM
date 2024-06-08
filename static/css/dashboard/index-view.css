@@ -1,6 +1,12 @@
-#editNextConsultDateBtn{
+
+
+.btn-svg{
     width: 1rem;
     height: 1rem;
+}
+
+.btn-svg:hover{
+    fill: red;
 }
 
 /* =================== TABLE ================== */
@@ -33,7 +39,7 @@
 }
 
 .table-container::-webkit-scrollbar-track {
-    background: var(--scrollbar-track-color); 
+    background: #a8a8a830; 
     border-radius: var(--table-border-radius);
 }
 
@@ -47,4 +53,19 @@
     background-color: #0b1a5e;
     border: 1px solid #0b1a5e;
     color: white
+}
+
+/* ==================== SearchPanel ===================  */
+.appointment-date,
+.appointment-time {
+    font-size: 0.9rem; /* Tamanho menor para a data e hora */
+}
+
+.patient-name {
+    width: 60%; /* Maior largura para a coluna do nome do paciente */
+}
+
+.cancel-appointment {
+    padding: 0; /* Remova o preenchimento do botão para reduzir o tamanho */
+    margin: 0; /* Remova a margem do botão */
 }
