@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.http import JsonResponse
 import json
 from django.db.models.functions import Lower
-from django.shortcuts import get_object_or_404
 from datetime import datetime
 
 @login_required
@@ -101,6 +100,7 @@ def save_new_consult_date(request):
     if request.method == "POST":
         new_date = request.POST.get("nextConsultDate")
 
+        NextConsultDate.objects.all().delete()
         next_date = NextConsultDate(date=new_date)
         next_date.save()
 
@@ -123,3 +123,21 @@ def add_appointment(request):
         appointment.save()
 
         return redirect('home')
+    
+@login_required
+def search_appointments(request):
+    next_consult_date = NextConsultDate.objects.all().first()
+    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
+    appointments = Appointment.objects.filter
+    
+    date = request.GET.get('search-date')
+    se_appointments = Appointment.objects.filter(appointment_date=date)
+
+    context = {
+        'patients': patients,
+        'next_consult_date': next_consult_date,
+        'appointments': appointments,
+        'se_appointments': se_appointments
+    }
+
+    return render(request, 'index.html', context=context)
