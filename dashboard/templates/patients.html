@@ -1,8 +1,10 @@
 ﻿{% extends "base.html" %}
 {% load static %}
 
+{% block "title" %}Pacientes{% endblock "title" %}
+
 {% block "head" %}
-    <link rel="stylesheet" href="{% static "css/patients/patients-view.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard/patients-view.css" %}">
 {% endblock "head" %}
 {% comment %} #TODO: Animação de loading enquanto carrega todos os registros {% endcomment %}
 
@@ -51,19 +53,19 @@
                                                 <input type="hidden" id="patientId" name="patientId" value="">
                                                 <div class="mb-5">
                                                     <label for="name">Nome</label>
-                                                    <input name="name" id="name" type="text" placeholder="Nome completo" class="form-input">
+                                                    <input name="name" id="name" type="text" placeholder="Nome completo" class="form-input" required>
                                                 </div>
                                                 <div class="mb-5">
                                                     <label for="birth_date">Data de Nascimento</label>
-                                                    <input name="birth_date" id="birth_date" type="date" placeholder="Data de nascimento" class="form-input">
+                                                    <input name="birth_date" id="birth_date" type="date" placeholder="Data de nascimento" class="form-input" required>
                                                 </div>
                                                 <div class="mb-5">
                                                     <label for="phone">Telefone</label>
-                                                    <input name="phone" id="phone" type="text" placeholder="(xx) xxxxx-xxxx" class="form-input">
+                                                    <input name="phone" id="phone" type="text" placeholder="(xx) xxxxx-xxxx" class="form-input" required>
                                                 </div>
                                                 <div class="mb-5">
                                                     <label for="address">Endereço</label>
-                                                    <textarea name="address" id="address" rows="3" placeholder="Endereço" class="form-textarea min-h-[130px] resize-none"></textarea>
+                                                    <textarea name="address" id="address" rows="3" placeholder="Endereço" class="form-textarea min-h-[130px] resize-none" required></textarea>
                                                 </div>
                                                 <div class="mt-8 flex items-center justify-end">
                                                     <button type="button" class="btn btn-outline-danger" onclick="closeModal()">Cancel</button>
@@ -146,6 +148,8 @@
 <script src="{% static "js/patients/patients-view.js" %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/patients/patients-view.js' %}"></script>
 
 
 {% endblock "content" %}

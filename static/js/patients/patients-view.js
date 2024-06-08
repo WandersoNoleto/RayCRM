@@ -77,13 +77,18 @@ function savePatient(event) {
     });
 }
 
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
 async function showDeleteAlert(patientName, patientId) {
     new window.Swal({
         icon: 'warning',
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Tem certeza que deseja apagar o registro desse paciente?',
+        text: `${patientName}`,
         showCancelButton: true,
-        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sim',
         padding: '2em',
     }).then((result) => {
         if (result.value) {
@@ -102,6 +107,12 @@ async function showDeleteAlert(patientName, patientId) {
                 console.error('Error deleting patient:', error);
             });
         }
-    });
-    
+    });   
 }
+document.querySelectorAll('.delete-button').forEach(button => {
+    button.addEventListener('click', (event) => {
+        const patientName = button.getAttribute('data-patient-name');
+        const patientId = button.getAttribute('data-patient-id');
+        showDeleteAlert(patientName, patientId);
+    });
+});
