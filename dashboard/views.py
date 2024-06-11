@@ -7,7 +7,9 @@ from django.urls import reverse
 import json
 from django.db.models.functions import Lower
 from datetime import datetime
+from users.decorators import receptionist_required
 
+@receptionist_required
 @login_required
 def home(request):
     next_consult_date = NextConsultDate.objects.all().first()
@@ -21,6 +23,7 @@ def home(request):
     }
     return render(request, 'index.html', context=context)
 
+@receptionist_required
 @login_required
 def view_patients(request):
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
@@ -30,6 +33,7 @@ def view_patients(request):
 
     return render(request, 'patients.html', context=context)
 
+@receptionist_required
 @login_required
 def add_patient(request):
     if request.method == 'POST':
@@ -61,6 +65,7 @@ def add_patient(request):
 
     return redirect('view_patients')
 
+@receptionist_required
 @login_required
 def get_patient(request, patient_id):
     patient = Patient.objects.get(id=patient_id)
@@ -73,7 +78,7 @@ def get_patient(request, patient_id):
     }
     return JsonResponse(data)
 
-
+@receptionist_required
 @login_required
 def edit_patient(request, patient_id):
     if request.method == 'PUT':
@@ -87,7 +92,8 @@ def edit_patient(request, patient_id):
         patient.save()
 
         return JsonResponse({'status': 'success'})
-
+    
+@receptionist_required
 @login_required 
 def delete_patient(request, patient_id):
     print(patient_id)
@@ -96,6 +102,7 @@ def delete_patient(request, patient_id):
 
     return JsonResponse({'status': 'success'})
 
+@receptionist_required
 @login_required
 def save_new_consult_date(request):
     if request.method == "POST":
@@ -107,6 +114,7 @@ def save_new_consult_date(request):
 
         return redirect('home')
     
+@receptionist_required    
 @login_required
 def add_appointment(request):
     if request.method == "POST":
@@ -129,6 +137,7 @@ def add_appointment(request):
 
         return redirect('home')
     
+@receptionist_required    
 @login_required
 def search_appointments(request):
     next_consult_date = NextConsultDate.objects.all().first()
@@ -163,6 +172,7 @@ def search_appointments(request):
 
     return render(request, 'index.html', context=context)
 
+@receptionist_required
 @login_required
 def cancel_appointment(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
