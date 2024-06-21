@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Patient, Appointment, NextConsultDate
+from .models import Patient, Appointment, NextConsultDate, PaymentMethods
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.http import JsonResponse
 import json
 from django.db.models.functions import Lower
 from datetime import datetime
@@ -15,11 +14,13 @@ def home(request):
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter
+    payment_methods = PaymentMethods.objects.all()
 
     context = {
         'patients': patients,
         'next_consult_date': next_consult_date,
-        'appointments': appointments
+        'appointments': appointments,
+        'payment_methods': payment_methods
     }
     return render(request, 'index.html', context=context)
 
@@ -143,6 +144,7 @@ def search_appointments(request):
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter
+    payment_methods = PaymentMethods.objects.all()
     
     search_date = request.GET.get('search-date')
     search_name = request.GET.get('search-name')
@@ -167,7 +169,8 @@ def search_appointments(request):
         'patients': patients,
         'next_consult_date': next_consult_date,
         'appointments': appointments,
-        'se_appointments': se_appointments
+        'se_appointments': se_appointments,
+        'payment_methods': payment_methods
     }
 
     return render(request, 'index.html', context=context)
@@ -181,5 +184,20 @@ def cancel_appointment(request, appointment_id):
 
 @login_required
 def settings_view(request):
+    payment_methods = PaymentMethods.objects.all()
 
-    return render(request, 'settings.html')
+    context={
+        'payment_methods': payment_methods
+    }
+
+    return render(request, 'settings.html', context)
+
+@login_required
+def add_payment_method(request):
+    if request.method == "POST":
+        name = request.POST.get('payment_method')
+
+        payment_method = PaymentMethods(name = name)
+        payment_method.save()
+
+        return redirect("settings")

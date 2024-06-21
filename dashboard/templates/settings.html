@@ -91,292 +91,25 @@
                 
                 <template x-if="tab === 'payment-details'">
                     <div>
-                        <div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
+                        <div class="mb-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
                             <div class="panel">
                                 <div class="mb-5">
-                                    <h5 class="mb-4 text-lg font-semibold">Billing Address</h5>
-                                    <p>
-                                        Changes to your <span class="text-primary">Billing</span> information will take effect starting with
-                                        scheduled payment and will be refelected on your next invoice.
-                                    </p>
+                                    <h5 class="mb-4 text-lg font-semibold">Métodos De Pagamento Aceitos</h5>
                                 </div>
-                                <div class="mb-5">
-                                    <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                        <div class="flex items-start justify-between py-3">
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                Address #1
-                                                <span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">2249 Caynor Circle, New Brunswick, New Jersey</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
-                                        </div>
+                                <form method="post" action="{% url "add_payment_method" %}">
+                                    {% csrf_token %}
+                                    <div class="mb-5 flex items-start">
+                                        <input type="text" name="payment_method" placeholder="Adicionar método" class="form-input">
+                                        <button type="submit" class="btn btn-primary ml-2">Adicionar</button>
                                     </div>
-                                    <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                        <div class="flex items-start justify-between py-3">
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                Address #2
-                                                <span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">4262 Leverton Cove Road, Springfield, Massachusetts</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
+                                </form>
+                                <div class="mb-5 flex flex-wrap gap-2">
+                                    {% for method in payment_methods %}
+                                        <div class="badge bg-dark p-2 rounded-full">
+                                            {{ method.name }}
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-start justify-between py-3">
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                Address #3
-                                                <span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">2692 Berkshire Circle, Knoxville, Tennessee</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                                <button class="btn btn-primary">Add Address</button>
-                            </div>
-                            <div class="panel">
-                                <div class="mb-5">
-                                    <h5 class="mb-4 text-lg font-semibold">Payment History</h5>
-                                    <p>
-                                        Changes to your <span class="text-primary">Payment Method</span> information will take effect starting
-                                        with scheduled payment and will be refelected on your next invoice.
-                                    </p>
-                                </div>
-                                <div class="mb-5">
-                                    <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                        <div class="flex items-start justify-between py-3">
-                                            <div class="flex-none ltr:mr-4 rtl:ml-4">
-                                                <img src="assets/images/card-americanexpress.svg" alt="image">
-                                            </div>
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                Mastercard
-                                                <span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">XXXX XXXX XXXX 9704</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                                        <div class="flex items-start justify-between py-3">
-                                            <div class="flex-none ltr:mr-4 rtl:ml-4">
-                                                <img src="assets/images/card-mastercard.svg" alt="image">
-                                            </div>
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                American Express<span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">XXXX XXXX XXXX 310</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-start justify-between py-3">
-                                            <div class="flex-none ltr:mr-4 rtl:ml-4">
-                                                <img src="assets/images/card-visa.svg" alt="image">
-                                            </div>
-                                            <h6 class="text-[15px] font-bold text-[#515365] dark:text-white-dark">
-                                                Visa<span class="mt-1 block text-xs font-normal text-white-dark dark:text-white-light">XXXX XXXX XXXX 5264</span>
-                                            </h6>
-                                            <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                                <button class="btn btn-dark">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-primary">Add Payment Method</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                            <div class="panel">
-                                <div class="mb-5">
-                                    <h5 class="mb-4 text-lg font-semibold">Add Billing Address</h5>
-                                    <p>Changes your New <span class="text-primary">Billing</span> Information.</p>
-                                </div>
-                                <div class="mb-5">
-                                    <form>
-                                        <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <label for="billingName">Name</label>
-                                                <input id="billingName" type="text" placeholder="Enter Name" class="form-input">
-                                            </div>
-                                            <div>
-                                                <label for="billingEmail">Email</label>
-                                                <input id="billingEmail" type="email" placeholder="Enter Email" class="form-input">
-                                            </div>
-                                        </div>
-                                        <div class="mb-5">
-                                            <label for="billingAddress">Address</label>
-                                            <input id="billingAddress" type="text" placeholder="Enter Address" class="form-input">
-                                        </div>
-                                        <div class="mb-5 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                                            <div class="md:col-span-2">
-                                                <label for="billingCity">City</label>
-                                                <input id="billingCity" type="text" placeholder="Enter City" class="form-input">
-                                            </div>
-                                            <div>
-                                                <label for="billingState">State</label>
-                                                <select id="billingState" class="form-select text-white-dark">
-                                                    <option>Choose...</option>
-                                                    <option>...</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label for="billingZip">Zip</label>
-                                                <input id="billingZip" type="text" placeholder="Enter Zip" class="form-input">
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-primary">Add</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="panel">
-                                <div class="mb-5">
-                                    <h5 class="mb-4 text-lg font-semibold">Add Payment Method</h5>
-                                    <p>Changes your New <span class="text-primary">Payment Method</span> Information.</p>
-                                </div>
-                                <div class="mb-5">
-                                    <form>
-                                        <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <label for="payBrand">Card Brand</label>
-                                                <select id="payBrand" class="form-select text-white-dark">
-                                                    <option selected="">Mastercard</option>
-                                                    <option>American Express</option>
-                                                    <option>Visa</option>
-                                                    <option>Discover</option>
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label for="payNumber">Card Number</label>
-                                                <input id="payNumber" type="text" placeholder="Card Number" class="form-input">
-                                            </div>
-                                        </div>
-                                        <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <label for="payHolder">Holder Name</label>
-                                                <input id="payHolder" type="text" placeholder="Holder Name" class="form-input">
-                                            </div>
-                                            <div>
-                                                <label for="payCvv">CVV/CVV2</label>
-                                                <input id="payCvv" type="text" placeholder="CVV" class="form-input">
-                                            </div>
-                                        </div>
-                                        <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <label for="payExp">Card Expiry</label>
-                                                <input id="payExp" type="text" placeholder="Card Expiry" class="form-input">
-                                            </div>
-                                        </div>
-                                        <button type="button" class="btn btn-primary">Add</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-                <template x-if="tab === 'preferences'">
-                    <div class="switch">
-                        <div class="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Choose Theme</h5>
-                                <div class="flex justify-around">
-                                    <label class="inline-flex cursor-pointer">
-                                        <input class="form-radio cursor-pointer ltr:mr-4 rtl:ml-4" type="radio" name="flexRadioDefault" checked="">
-                                        <span>
-                                            <img class="ms-3" width="100" height="68" alt="settings-dark" src="assets/images/settings-light.svg">
-                                        </span>
-                                    </label>
-
-                                    <label class="inline-flex cursor-pointer">
-                                        <input class="form-radio cursor-pointer ltr:mr-4 rtl:ml-4" type="radio" name="flexRadioDefault">
-                                        <span>
-                                            <img class="ms-3" width="100" height="68" alt="settings-light" src="assets/images/settings-dark.svg">
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Activity data</h5>
-                                <p>Download your Summary, Task and Payment History Data</p>
-                                <button type="button" class="btn btn-primary">Download Data</button>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Public Profile</h5>
-                                <p>Your <span class="text-primary">Profile</span> will be visible to anyone on the network.</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox1">
-                                    <span for="custom_switch_checkbox1" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Show my email</h5>
-                                <p>Your <span class="text-primary">Email</span> will be visible to anyone on the network.</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox2">
-                                    <span for="custom_switch_checkbox2" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Enable keyboard shortcuts</h5>
-                                <p>When enabled, press <span class="text-primary">ctrl</span> for help</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox3">
-                                    <span for="custom_switch_checkbox3" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Hide left navigation</h5>
-                                <p>Sidebar will be <span class="text-primary">hidden</span> by default</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox4">
-                                    <span for="custom_switch_checkbox4" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Advertisements</h5>
-                                <p>Display <span class="text-primary">Ads</span> on your dashboard</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox5">
-                                    <span for="custom_switch_checkbox5" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Social Profile</h5>
-                                <p>Enable your <span class="text-primary">social</span> profiles on this network</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox6">
-                                    <span for="custom_switch_checkbox6" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-                <template x-if="tab === 'danger-zone'">
-                    <div class="switch">
-                        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Purge Cache</h5>
-                                <p>Remove the active resource from the cache without waiting for the predetermined cache expiry time.</p>
-                                <button class="btn btn-secondary">Clear</button>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Deactivate Account</h5>
-                                <p>You will not be able to receive messages, notifications for up to 24 hours.</p>
-                                <label class="relative h-6 w-12">
-                                    <input type="checkbox" class="custom_switch peer absolute z-10 h-full w-full cursor-pointer opacity-0" id="custom_switch_checkbox7">
-                                    <span for="custom_switch_checkbox7" class="block h-full rounded-full bg-[#ebedf2] before:absolute before:left-1 before:bottom-1 before:h-4 before:w-4 before:rounded-full before:bg-white before:transition-all before:duration-300 peer-checked:bg-primary peer-checked:before:left-7 dark:bg-dark dark:before:bg-white-dark dark:peer-checked:before:bg-white"></span>
-                                </label>
-                            </div>
-                            <div class="panel space-y-5">
-                                <h5 class="mb-4 text-lg font-semibold">Delete Account</h5>
-                                <p>Once you delete the account, there is no going back. Please be certain.</p>
-                                <button class="btn btn-danger btn-delete-account">Delete my account</button>
                             </div>
                         </div>
                     </div>
@@ -389,5 +122,15 @@
 </div>
 
 
+<style scoped>
+    .badge {
+        min-width: 80px;
+        max-width: fit-content; 
+        white-space: nowrap; 
+        display: flex;
+        justify-content: center;
 
+        cursor: pointer;
+    }
+</style>
 {% endblock "content" %}

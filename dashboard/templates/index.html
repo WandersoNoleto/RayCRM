@@ -191,9 +191,9 @@
                             <label for="payment-method">Forma de pagamento</label>
                             <select id="payment-method" name="payment-method" class="form-select" x-model="paymentMethod">
                                 <option value="">Selecionar</option>
-                                <option value="bank">Pix</option>
-                                <option value="paypal">Espécie</option>
-                                <option value="upi">Crédito</option>
+                                {% for payment in payment_methods %}
+                                    <option value="{{payment.id}}">{{payment.name}}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="mt-4 flex justify-end">
