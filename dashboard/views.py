@@ -141,11 +141,6 @@ def add_appointment(request):
 
 @login_required
 def search_appointments(request):
-    next_consult_date = NextConsultDate.objects.all().first()
-    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
-    appointments = Appointment.objects.filter
-    payment_methods = PaymentMethods.objects.all()
-    
     search_date = request.GET.get('search-date')
     search_name = request.GET.get('search-name')
     se_appointments = []
@@ -165,15 +160,16 @@ def search_appointments(request):
                 patient__name__icontains=search_name
             )
 
-    context = {
-        'patients': patients,
-        'next_consult_date': next_consult_date,
-        'appointments': appointments,
-        'se_appointments': se_appointments,
-        'payment_methods': payment_methods
-    }
+    appointments_data = []
+    for appointment in se_appointments:
+        appointments_data.append({
+            'appointment_date': appointment.appointment_date.strftime('%d/%m/%Y'),
+            'appointment_time': appointment.appointment_time.strftime('%H:%M'),
+            'patient_name': appointment.patient.name,
+            'appointment_id': appointment.id  # Incluímos o ID para o botão de cancelar
+        })
 
-    return render(request, 'index.html', context=context)
+    return JsonResponse(appointments_data, safe=False)
 
 @login_required
 def cancel_appointment(request, appointment_id):

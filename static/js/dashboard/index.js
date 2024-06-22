@@ -78,7 +78,7 @@ document.getElementById('submitAppointmentForm').addEventListener('click', funct
     if (date.getDay() !== 2) {
         Swal.fire({
             icon: 'warning',
-            title: 'Dia não é uma quarta-feira',
+            title: 'A data informada não é uma quarta-feira',
             text: 'Você deseja continuar com esta data?',
             showCancelButton: true,
             confirmButtonText: 'Sim',
@@ -100,7 +100,7 @@ document.getElementById('submitEditNextConsultDateForm').addEventListener('click
     if (date.getDay() !== 2) {
         Swal.fire({
             icon: 'warning',
-            title: 'Dia não é uma quarta-feira',
+            title: 'A data informada não é uma quarta-feira',
             text: 'Você deseja continuar com esta data?',
             showCancelButton: true,
             confirmButtonText: 'Sim',
