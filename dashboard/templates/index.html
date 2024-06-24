@@ -26,65 +26,74 @@
         <!-- start main content section -->
         <div class="flex flex-col gap-2.5 w-full xl:flex-row ">
 
-            <div class="panel mt-6 xl:mt-0 flex-1">
+            <div class="panel panel-main-content mt-6 xl:mt-0 flex-1">
                 <div class="mb-5">
-                    <div class="mb-4 flex flex-col items-center justify-center sm:flex-row sm:justify-between">
-                        <div class="mb-4 sm:mb-0">
-                        
-                            <div class="mt-2 flex flex-wrap items-center justify-center sm:justify-start">
-                                <div>
-                                    <h5 class="font-semibold dark:text-white-light">
-                                        Próxima data de consulta: <span  class="text-info">{{ next_consult_date.show }}</span>
-                                    </h5>
-                                    <p onclick="openNextConsultDateEditModal()" class="btn-new-consult-date">Alterar</p>
-                                </div>
-                            </div>
-                            <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" id="editNextConsultDateModal">
-                                <div class="flex min-h-screen items-center justify-center px-4">
-                                    <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
-                                        <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Editar Próxima Consulta</h3>
-                                        <div class="p-5">
-                                            <form id="editNextConsultDateForm" method="post" action="{% url "save_next_consult_date" %}">
-                                                {% csrf_token %}
-                                                <div class="mb-5">
-                                                    <label for="nextConsultDate">Nova Data:</label>
-                                                    <input name="nextConsultDate" id="nextConsultDate" type="date" class="form-input" placeholder="" required>
-                                                    <div class="mt-2 text-danger" id="nextConsultDateErr"></div>
-                                                </div>
-                                                
-                                                <div class="mt-8 flex items-center justify-end">
-                                                    <button type="button" class="btn btn-outline-danger" onclick="closeNextConsultDateModal()">
-                                                        Cancelar
-                                                    </button>
-                                                    <button type="button" id="submitEditNextConsultDateForm" class="btn btn-primary ltr:ml-4 rtl:mr-4">Salvar</button>
-                                                </div>
-                                            </form>
+                    <div id="headerSection">
+                        <div id="normalContent">
+                            <!-- Conteúdo normal inicial dentro de headerSection -->
+                            <div class="mb-4 flex flex-col items-center justify-center sm:flex-row sm:justify-between">
+                                <div class="mb-4 sm:mb-0">
+                                    <div class="mt-2 flex flex-wrap items-center justify-center sm:justify-start">
+                                        <div>
+                                            <h5 class="font-bold dark:text-white-light">
+                                                Próxima data de consulta: <span class="text-info">{{ next_consult_date.show }}</span>
+                                            </h5>
+                                            <p onclick="openNextConsultDateEditModal()" class="btn-new-consult-date">Alterar</p>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="flex justify-center">
+                                    <div class="flex justify-center">
+                                        <button type="button" class="btn btn-success rounded" onclick="startConsultationDay()">
+                                            <svg width="1rem" height="1rem" viewBox="-0.5 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <g id="Dribbble-Light-Preview" transform="translate(-347.000000, -3766.000000)" fill="#fff">
+                                                        <g id="icons" transform="translate(56.000000, 160.000000)">
+                                                            <path d="M296.494737,3608.57322 L292.500752,3606.14219 C291.83208,3605.73542 291,3606.25002 291,3607.06891 L291,3611.93095 C291,3612.7509 291.83208,3613.26444 292.500752,3612.85767 L296.494737,3610.42771 C297.168421,3610.01774 297.168421,3608.98319 296.494737,3608.57322" id="play-[#1003]"></path>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                            <span class="ml-2">Iniciar atendimento</span>
+                                        </button>
+                                    </div>
+                                    <button type="button" class="ml-2 btn btn-appointment" onclick="editEvent()">
+                                        <svg width="1rem" height="1rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                                            <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -1037.000000)" fill="#fff">
+                                                <path d="M390,1049 L382,1049 L382,1041 C382,1038.79 380.209,1037 378,1037 C375.791,1037 374,1038.79 374,1041 L374,1049 L366,1049 C363.791,1049 362,1050.79 362,1053 C362,1055.21 363.791,1057 366,1057 L374,1057 L374,1065 C374,1067.21 375.791,1069 378,1069 C380.209,1069 382,1067.21 382,1065 L382,1057 L390,1057 C392.209,1057 394,1055.21 394,1053 C394,1050.79 392.209,1049 390,1049" id="plus" sketch:type="MSShapeGroup"> </path>
+                                            </g>
+                                        </svg>
+                                        <span class="ml-2">Agendar</span>
+                                    </button>
+                                </div>
                             </div>
-                            
                         </div>
-                        <div class="flex justify-center">
-                            <div class="flex justify-center">
-                                <button type="button" class="btn btn-success rounded">
-                                    <svg width="1rem" height="1rem" viewBox="-0.5 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <g id="Dribbble-Light-Preview" transform="translate(-347.000000, -3766.000000)" fill="#fff">
-                                        <g id="icons" transform="translate(56.000000, 160.000000)">
-                                        <path d="M296.494737,3608.57322 L292.500752,3606.14219 C291.83208,3605.73542 291,3606.25002 291,3607.06891 L291,3611.93095 C291,3612.7509 291.83208,3613.26444 292.500752,3612.85767 L296.494737,3610.42771 C297.168421,3610.01774 297.168421,3608.98319 296.494737,3608.57322" id="play-[#1003]"></path></g></g></g>
-                                    </svg>
-                                    <span class="ml-2">Iniciar atendimento</span>
-                                </button>
+
+                        <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" id="editNextConsultDateModal">
+                            <div class="flex min-h-screen items-center justify-center px-4">
+                                <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
+                                    <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]">Editar Próxima Consulta</h3>
+                                    <div class="p-5">
+                                        <form id="editNextConsultDateForm" method="post" action="{% url "save_next_consult_date" %}">
+                                            {% csrf_token %}
+                                            <div class="mb-5">
+                                                <label for="nextConsultDate">Nova Data:</label>
+                                                <input name="nextConsultDate" id="nextConsultDate" type="date" class="form-input" placeholder="" required>
+                                                <div class="mt-2 text-danger" id="nextConsultDateErr"></div>
+                                            </div>
+                                            
+                                            <div class="mt-8 flex items-center justify-end">
+                                                <button type="button" class="btn btn-outline-danger" onclick="closeNextConsultDateModal()">
+                                                    Cancelar
+                                                </button>
+                                                <button type="button" id="submitEditNextConsultDateForm" class="btn btn-primary ltr:ml-4 rtl:mr-4">Salvar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="button" class="ml-2 btn btn-appointment" onclick="editEvent()">
-                                <svg  width="1rem" height="1rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-                                    <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -1037.000000)" fill="#fff">
-                                    <path d="M390,1049 L382,1049 L382,1041 C382,1038.79 380.209,1037 378,1037 C375.791,1037 374,1038.79 374,1041 L374,1049 L366,1049 C363.791,1049 362,1050.79 362,1053 C362,1055.21 363.791,1057 366,1057 L374,1057 L374,1065 C374,1067.21 375.791,1069 378,1069 C380.209,1069 382,1067.21 382,1065 L382,1057 L390,1057 C392.209,1057 394,1055.21 394,1053 C394,1050.79 392.209,1049 390,1049" id="plus" sketch:type="MSShapeGroup"> </path></g></g>
-                                </svg>
-                                <span class="ml-2">Agendar</span>
-                            </button>
                         </div>
+
                         <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60" id="addEventModal">
                             <div class="flex min-h-screen items-center justify-center px-4">
                                 <div class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
@@ -136,8 +145,71 @@
                                 </div>
                             </div>
                         </div>
+                    
+                        <div id="diaDeConsultaContent" class="hidden">
+                            <div class="consult-day-header">
+                                <div class="text-center mb-2">
+                                    <h1 class="font-bold">Atendimento iniciado</h1>
+                                    <span class="text-info">{{ next_consult_date.date|date:"d/m/Y" }}</span>
+                                </div>
+                                <hr class="border-gray-300">
+                            </div>
+                           
+                            <div class="flex justify-between mt-4 mb-5 ">
+                                <div class="flex justify-center mb-5 consult-day-header-statistics">
+                                    <div class="flex items-center statistics-item">
+                                        <svg width="12" height="12" viewBox="0 0 2000 2000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1000" cy="1000" r="1000" fill="#1C274C"/>
+                                        </svg>
+                                        <span>Agendados: <span class="statistics-item-value">12</span></span>
+                                    </div>
+                                    <div class="flex items-center statistics-item">
+                                        <svg width="12" height="12" viewBox="0 0 2000 2000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1000" cy="1000" r="1000" fill="#01b228"/>
+                                        </svg>
+                                        <span>Atendidos: <span class="statistics-item-value">7</span></span>
+                                    </div>
+                                    <div class="flex items-center statistics-item">
+                                        <svg width="12" height="12" viewBox="0 0 2000 2000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1000" cy="1000" r="1000" fill="#b52b01"/>
+                                        </svg>
+                                        <span>Faltaram: <span class="statistics-item-value">2</span></span>
+                                    </div>
+                                    <div class="flex items-center statistics-item">
+                                        <svg width="12" height="12" viewBox="0 0 2000 2000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1000" cy="1000" r="1000" fill="#3db5ba"/>
+                                        </svg>
+                                        <span>Aguardando: <span class="statistics-item-value">3</span> </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-center">
+                                        <div class="flex justify-center">
+                                            <button type="button" class="btn btn-success rounded" onclick="startConsultationDay()">
+                                                <svg width="1rem" height="1rem" viewBox="0 -2 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <g id="Dribbble-Light-Preview" transform="translate(-144.000000, -3805.000000)" fill="#fff">
+                                                    <g id="icons" transform="translate(56.000000, 160.000000)">
+                                                    <path d="M99.684,3649.69353 L95.207,3652.82453 C94.571,3653.25353 94,3652.84553 94,3652.13153 L94,3650.14053 L89.78,3652.82453 C89.145,3653.25353 88,3652.84553 88,3652.13153 L88,3645.86853 C88,3645.15453 89.145,3644.74653 89.78,3645.17453 L94,3647.85953 L94,3645.86853 C94,3645.15453 94.571,3644.74653 95.207,3645.17453 L99.516,3648.30653 C100.03,3648.65353 100.198,3649.34653 99.684,3649.69353" id="next-[#998]"></path></g></g></g>
+                                                </svg>
+                                                <span class="ml-2">Próximo</span>
+                                            </button>
+                                        </div>
+                                        <button type="button" class="ml-2 btn btn-appointment" onclick="editEvent()">
+                                            <svg width="1rem" height="1rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                                                <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -1037.000000)" fill="#fff">
+                                                    <path d="M390,1049 L382,1049 L382,1041 C382,1038.79 380.209,1037 378,1037 C375.791,1037 374,1038.79 374,1041 L374,1049 L366,1049 C363.791,1049 362,1050.79 362,1053 C362,1055.21 363.791,1057 366,1057 L374,1057 L374,1065 C374,1067.21 375.791,1069 378,1069 C380.209,1069 382,1067.21 382,1065 L382,1057 L390,1057 C392.209,1057 394,1055.21 394,1053 C394,1050.79 392.209,1049 390,1049" id="plus" sketch:type="MSShapeGroup"> </path>
+                                                </g>
+                                            </svg>
+                                            <span class="ml-2">Agendar</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="table-responsive table-container">
+                    
+                    <div id="tableContainer" class="table-responsive table-container">
                         <table class="table-hover table-bordered table-striped">
                             <thead>
                                 <tr class="!bg-transparent dark:!bg-transparent">
@@ -279,6 +351,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static "js/dashboard/index.js" %}"></script>
+<script src="{% static "js/dashboard/queue_appointments.js" %}"></script>
 <script>
     function closeModal() {
         document.getElementById('addEventModal').classList.add('hidden');
