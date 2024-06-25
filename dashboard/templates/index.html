@@ -185,7 +185,7 @@
                                 <div>
                                     <div class="flex justify-center">
                                         <div class="flex justify-center">
-                                            <button type="button" class="btn btn-success rounded" onclick="startConsultationDay()">
+                                            <button type="button" class="btn btn-success rounded" onclick="goToNextAppointment()">
                                                 <svg width="1rem" height="1rem" viewBox="0 -2 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <g id="Dribbble-Light-Preview" transform="translate(-144.000000, -3805.000000)" fill="#fff">
@@ -219,29 +219,35 @@
                             </thead>
                             <tbody>
                                 {% for time in 8|times:15 %}
-                                    <tr class="{% cycle 'even-row' 'odd-row' %}">
-                                            <th >{{ time }}</th>
-                                            <td >
-                                                <button class="text-blue-500 flex items-center justify-center w-full h-full">
-                                                    {% for appointment in appointments %}
-                                                        {% if appointment.appointment_date == next_consult_date.date and appointment.appointment_time|format_time == time %}
-                                                            <div class="filled-cell ">
-                                                                <div>
-                                                                    {{ appointment.patient.name }}
-                                                                </div>
-                                                        {% else %}
-                                                        {% endif %}
-                                                    {% endfor %}          
-                                                </button>
-                                            </td>
-                                        </tr>
+                                    <tr class="{% cycle 'even-row' 'odd-row' %}" id="appointment-{{ forloop.counter }}" 
+                                        {% for appointment in appointments %}
+                                            {% if appointment.appointment_date == next_consult_date.date and appointment.appointment_time|format_time == time %}
+                                                data-appointment-id="{{ appointment.id }}"
+                                                onclick="showPatientData('{{ appointment.id }}')"
+                                            {% endif %}
+                                        {% endfor %}>
+                                        <th>{{ time }}</th>
+                                        <td>
+                                            <button class="text-blue-500 flex items-center justify-center w-full h-full">
+                                                {% for appointment in appointments %}
+                                                    {% if appointment.appointment_date == next_consult_date.date and appointment.appointment_time|format_time == time %}
+                                                        <div class="filled-cell">
+                                                            <div class="current-patient-name">
+                                                                {{ appointment.patient.name }}
+                                                            </div>
+                                                    {% else %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </button>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                                 <tr>
-                                    <th >20:00</th>
-                                    <td  colspan="8">
-                                    </td>
+                                    <th>20:00</th>
+                                    <td colspan="8"></td>
                                 </tr>
                             </tbody>
+                            
                         </table>
                     </div>
                     
@@ -249,44 +255,45 @@
             </div>
             <div class="mt-6 xl:mt-0 ">
                 <div class="col-md-12">
-                        <div class="panel mb-9 xl:w-full">
-                            <h3 class="mb-5 font-bold text-lg text-center">Dados do Paciente</h3>
-                            <div>
-                                <label for="currency">Nome</label>
-                                <input id="tax" type="number" name="tax" class="form-input" placeholder="Nenhum paciente selecionado" x-model="tax">
-                            </div>
-                            <div class="mt-4">
-                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    <div>
-                                        <label for="tax">Data de nascimento</label>
-                                        <input id="tax" type="number" name="tax" class="form-input" placeholder="Tax" x-model="tax">
-                                    </div>
-                                    <div>
-                                        <label for="discount">Telefone</label>
-                                        <input id="discount" type="number" name="discount" class="form-input" placeholder="Discount" x-model="discount">
-                                    </div>
+                    <div class="panel mb-9 xl:w-full">
+                        <h3 class="mb-5 font-bold text-lg text-center">Dados do Paciente</h3>
+                        <div>
+                            <label for="name">Nome</label>
+                            <input id="name" type="text" name="name" class="form-input" placeholder="Nenhum paciente selecionado" disabled>
+                        </div>
+                        <div class="mt-4">
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label for="birth-date">Data de nascimento</label>
+                                    <input id="birth-date" type="date" name="birth-date" class="form-input" disabled>
+                                </div>
+                                <div>
+                                    <label for="phone">Telefone</label>
+                                    <input id="phone" type="text" name="phone" class="form-input" placeholder="(xx) xxxxx-xxxx">
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <label for="payment-method">Forma de pagamento</label>
-                                <select id="payment-method" name="payment-method" class="form-select" x-model="paymentMethod">
-                                    <option value="">Selecionar</option>
-                                    {% for payment in payment_methods %}
-                                        <option value="{{payment.id}}">{{payment.name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="mt-4 flex justify-end">
-                                <button type="button" class="btn btn-success w-full gap-2">
-                                    <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
-                                        <path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z" stroke="currentColor" stroke-width="1.5"></path>
-                                        <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" stroke-width="1.5"></path>
-                                        <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                                    </svg>
-                                    Salvar
-                                </button>
-                            </div>
                         </div>
+                        <div class="mt-4">
+                            <label for="payment-method">Forma de pagamento</label>
+                            <select id="payment-method" name="payment-method" class="form-select" disabled>
+                                <option value="">Selecionar</option>
+                                {% for payment in payment_methods %}
+                                    <option value="{{ payment.id }}">{{ payment.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button type="button" id="btn-save" class="btn btn-success w-full gap-2" disabled onclick="savePatientData()">
+                                <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 ltr:mr-2 rtl:ml-2">
+                                    <path d="M3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 11.6585 22 11.4878 21.9848 11.3142C21.9142 10.5049 21.586 9.71257 21.0637 9.09034C20.9516 8.95687 20.828 8.83317 20.5806 8.58578L15.4142 3.41944C15.1668 3.17206 15.0431 3.04835 14.9097 2.93631C14.2874 2.414 13.4951 2.08581 12.6858 2.01515C12.5122 2 12.3415 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355Z" stroke="currentColor" stroke-width="1.5"></path>
+                                    <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" stroke-width="1.5"></path>
+                                    <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                                </svg>
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+                    
                     </div>
                     <div class="panel mb-5 xl:w-full" id="searchPanel">
                         <form method="get" action="{% url 'search_appointments' %}">
@@ -348,7 +355,6 @@
     </div>
         <!-- end main content section -->
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static "js/dashboard/index.js" %}"></script>
 <script src="{% static "js/dashboard/queue_appointments.js" %}"></script>
@@ -373,8 +379,5 @@
         modal.classList.add('hidden');
     } 
 </script>
-
-
-
    
 {% endblock "content" %}

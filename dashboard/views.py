@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from .models import Patient, Appointment, NextConsultDate, PaymentMethods
 from django.contrib import messages
 from django.http import JsonResponse
@@ -197,3 +198,38 @@ def add_payment_method(request):
         payment_method.save()
 
         return redirect("settings")
+
+@require_http_methods(["GET"]) 
+def get_patient_data(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+        patient = appointment.patient
+        data = {
+            'name': patient.name,
+            'birth_date': patient.birth_date.strftime('%Y-%m-%d'),
+            'phone': patient.phone,
+            'payment_method': appointment.pay_method
+        }
+        return JsonResponse(data)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)
+
+@require_http_methods(["POST"])
+def save_patient_data(request):
+    data = json.loads(request.body)
+    try:
+        patient = Patient.objects.get(id=data['id'])
+        patient.name = data['name']
+        patient.birth_date = data['birth_date']
+        patient.phone = data['phone']
+        patient.save()
+
+        appointment = Appointment.objects.get(id=data['appointment_id'])
+        appointment.payment_method_id = data['payment_method']
+        appointment.save()
+
+        return JsonResponse({'success': 'Data saved successfully'})
+    except Patient.DoesNotExist:
+        return JsonResponse({'error': 'Patient not found'}, status=404)
+    except Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)

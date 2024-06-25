@@ -52,32 +52,6 @@ button span{
     fill: red;
 }
 
-/* =================== HeaderQueue ================== */
-
-.consult-day-header h1{
-    font-size: 1.4rem;
-}
-
-.consult-day-header span{
-    font-weight: 500;
-}
-
-.statistics-item{
-   margin-left: 1rem;
-}
-
-.statistics-item span{
-    margin-left: 0.3rem;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #8a8888;
-}
-
-.statistics-item span .statistics-item-value{
-    font-size: 0.8rem;
-    color: #5c5c5c;
-}
-
 
 /* ================ TABLE =============== */
 .table-container {
@@ -153,13 +127,11 @@ button span{
     position:absolute;
     left: 0;
     padding-left: 1rem;
-    top: 50%; /* Ajuste para centralizar verticalmente */
+    top: 50%; 
     transform: translateY(-50%);
     display: flex;
     align-items: center; 
 }
-
-
 
 .btn-appointment{
     background-color: #0b1a5e;
@@ -181,6 +153,61 @@ button span{
     padding: 0; 
     margin: 0; 
 }
+
+
+/* =================== HeaderQueue ================== */
+
+.consult-day-header h1{
+    font-size: 1.4rem;
+}
+
+.consult-day-header span{
+    font-weight: 500;
+}
+
+.statistics-item{
+   margin-left: 1rem;
+}
+
+.statistics-item span{
+    margin-left: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #8a8888;
+}
+
+.statistics-item span .statistics-item-value{
+    font-size: 0.8rem;
+    color: #5c5c5c;
+}
+
+/* =================== TableQueue ================== */
+
+.table-hover tbody tr.current-patient th:first-child {
+    background-color: #297e29e6;
+}
+
+.table-hover tbody tr.current-patient .filled-cell {
+    background-color: #43a743e6;
+    color: white; 
+}
+
+.table-hover tbody tr.current-patient .filled-cell:hover {
+    background-color: #34c934e6;
+    color: white; 
+}
+
+
+.table-hover tbody tr.current-patient td {
+    background-color: rgba(103, 239, 103, 0.365); 
+    color: white;
+}
+
+.table-hover tbody tr.current-patient td:hover {
+    background-color: rgba(103, 239, 103, 0.6); 
+    color: white;
+}
+
 
 /* ================ MESSAGES ==================== */
 .messages-center {
