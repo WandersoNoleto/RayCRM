@@ -208,7 +208,7 @@ def get_patient_data(request, appointment_id):
             'name': patient.name,
             'birth_date': patient.birth_date.strftime('%Y-%m-%d'),
             'phone': patient.phone,
-            'payment_method': appointment.pay_method
+            'payment_method': appointment.payment_method
         }
         return JsonResponse(data)
     except Appointment.DoesNotExist:

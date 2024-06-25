@@ -20,12 +20,17 @@ class Patient(models.Model):
     def __str__(self):
         return self.name
     
+class PaymentMethods(models.Model):
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
+    
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     appointment_date = models.DateField()
     appointment_time = models.TimeField()
-    #TODO: Choices
-    pay_method = models.CharField(max_length=50, default="n_atendido")
+    payment_method = models.ForeignKey(PaymentMethods, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Agendamento: {self.patient.name}, {self.appointment_date} às {self.appointment_time}"
@@ -44,8 +49,3 @@ class NextConsultDate(models.Model):
         return str(self.date)
     
 
-class PaymentMethods(models.Model):
-    name = models.CharField(max_length=150)
-
-    def __str__(self):
-        return self.name

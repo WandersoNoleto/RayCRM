@@ -53,6 +53,43 @@ button span{
 }
 
 
+/* ===================  Bagdes ================== */
+
+.statistics-item{
+    background-color: #3B3F5C;
+    border-radius: 0.4em;
+    color: #E0E6ED;
+    font-weight: 700;
+
+    min-width: 8.4em;
+    height: 1em;
+    padding: 1em;
+
+    display: flex;
+    align-items: center;
+}
+
+.statistics-item span{
+    margin-left: 1em;
+    padding: 0.7em;
+    border-radius: 0.3em;
+    background-color: #E0E6ED;
+    color:#3B3F5C;
+
+    width: 0.7em;
+    height: 0.7em;
+    font-size: 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.statistics-item{
+    margin-left: 1em;
+}
+
 /* ================ TABLE =============== */
 .table-container {
     height: 48em;
@@ -158,28 +195,16 @@ button span{
 /* =================== HeaderQueue ================== */
 
 .consult-day-header h1{
-    font-size: 1.4rem;
-}
-
-.consult-day-header span{
-    font-weight: 500;
-}
-
-.statistics-item{
-   margin-left: 1rem;
-}
-
-.statistics-item span{
-    margin-left: 0.3rem;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #8a8888;
-}
-
-.statistics-item span .statistics-item-value{
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     color: #5c5c5c;
 }
+
+.consult-day-header #next-consult-date{
+    font-weight: 500;
+    color: #4361EE;
+    font-size: 1.2em;
+}
+
 
 /* =================== TableQueue ================== */
 
