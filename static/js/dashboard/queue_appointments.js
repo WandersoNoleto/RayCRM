@@ -1,3 +1,15 @@
+let currentAppointmentIndex = -1; 
+const totalAppointmentsElement = document.getElementById('total-appointments');
+const treatedCountElement = document.getElementById('treated-count');
+const waitingCountElement = document.getElementById('waiting-count');
+
+const totalAppointments = parseInt(totalAppointmentsElement.innerText);
+let treatedCount = 0-1;
+let waitingCount = totalAppointments+1;
+
+document.getElementById('treated-count').innerText = treatedCount;
+document.getElementById('waiting-count').innerText = waitingCount;
+
 function startConsultationDay() {
     document.getElementById('normalContent').classList.add('hidden');
     document.getElementById('diaDeConsultaContent').classList.remove('hidden');
@@ -14,8 +26,6 @@ function closeConsultationDay() {
     document.getElementById('diaDeConsultaContent').classList.add('hidden');
     document.getElementById('normalContent').classList.remove('hidden');
 }
-
-let currentAppointmentIndex = -1; 
 
 function highlightNextAppointment() {
     const appointmentRows = document.querySelectorAll('tr[id^="appointment-"]');
@@ -36,6 +46,11 @@ function highlightNextAppointment() {
                 fetchPatientData(appointmentId);
             }
 
+            treatedCount++;
+            waitingCount--;
+
+            treatedCountElement.innerText = treatedCount;
+            waitingCountElement.innerText = waitingCount;
             appointmentRows[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
             break;
         }
@@ -45,7 +60,6 @@ function highlightNextAppointment() {
         currentAppointmentIndex = -1;
     }
 }
-
 function goToNextAppointment() {
     highlightNextAppointment();
 }
@@ -57,6 +71,7 @@ function showPatientData(appointmentId) {
 
 
 function updatePatientPanel(patientData) {
+    const idInput = document.getElementById('appointment-id');
     const nameInput = document.getElementById('name');
     const birthDateInput = document.getElementById('birth-date');
     const phoneInput = document.getElementById('phone');
@@ -64,16 +79,22 @@ function updatePatientPanel(patientData) {
     const saveButton = document.getElementById('btn-save');
 
     if (patientData) {
+        idInput.value = patientData.id;
         nameInput.value = patientData.name;
         birthDateInput.value = patientData.birth_date;
         phoneInput.value = patientData.phone;
         paymentMethodSelect.value = patientData.payment_method;
 
-        nameInput.disabled = false;
-        birthDateInput.disabled = false;
-        phoneInput.disabled = false;
         paymentMethodSelect.disabled = false;
         saveButton.disabled = false;
+
+        const paymentMethodId = patientData.payment_method;
+        if (paymentMethodId) {
+            const option = paymentMethodSelect.querySelector(`option[value="${paymentMethodId}"]`);
+            if (option) {
+                option.selected = true;
+            }
+        }
     } else {
         nameInput.value = '';
         birthDateInput.value = '';
@@ -97,29 +118,41 @@ function fetchPatientData(appointmentId) {
         .catch(error => console.error('Error:', error));
 }
 
-function savePatientData() {
-    const nameInput = document.getElementById('name');
-    const birthDateInput = document.getElementById('birth-date');
-    const phoneInput = document.getElementById('phone');
-    const paymentMethodSelect = document.getElementById('payment-method');
 
-    const patientData = {
-        name: nameInput.value,
-        birth_date: birthDateInput.value,
-        phone: phoneInput.value,
-        payment_method: paymentMethodSelect.value
-    };
+document.getElementById('appointment-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(this);
 
-    fetch(`/api/save-patient-data/`, {
+    fetch(this.action, {
         method: 'POST',
+        body: formData,
         headers: {
-            'Content-Type': 'application/json'
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
         },
-        body: JSON.stringify(patientData)
     })
-        .then(response => response.json())
-        .then(data => {
-            alert('Dados salvos com sucesso!');
-        })
-        .catch(error => console.error('Error:', error));
-}
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao atualizar os dados do paciente.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const paymentMethodSelect = document.getElementById('payment-method');
+        const selectedPaymentMethodId = formData.get('payment-method');
+        const option = paymentMethodSelect.querySelector(`option[value="${selectedPaymentMethodId}"]`);
+        if (option) {
+            option.selected = true;
+
+            const currentPaymentMethodElement = document.querySelector('.current-payment-method');
+            if (currentPaymentMethodElement) {
+                currentPaymentMethodElement.textContent = option.textContent.trim();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao atualizar os dados do paciente.');
+    });
+});
+

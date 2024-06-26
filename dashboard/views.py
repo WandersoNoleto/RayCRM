@@ -200,36 +200,36 @@ def add_payment_method(request):
         return redirect("settings")
 
 @require_http_methods(["GET"]) 
-def get_patient_data(request, appointment_id):
+def get_appointment_data(request, appointment_id):
     try:
         appointment = Appointment.objects.get(id=appointment_id)
         patient = appointment.patient
+        payment_method_id = appointment.payment_method.id if appointment.payment_method else None
+        
         data = {
+            'id': appointment.id,
             'name': patient.name,
             'birth_date': patient.birth_date.strftime('%Y-%m-%d'),
             'phone': patient.phone,
-            'payment_method': appointment.payment_method
+            'payment_method': payment_method_id
         }
         return JsonResponse(data)
     except Appointment.DoesNotExist:
         return JsonResponse({'error': 'Appointment not found'}, status=404)
 
 @require_http_methods(["POST"])
-def save_patient_data(request):
-    data = json.loads(request.body)
-    try:
-        patient = Patient.objects.get(id=data['id'])
-        patient.name = data['name']
-        patient.birth_date = data['birth_date']
-        patient.phone = data['phone']
-        patient.save()
+def save_appointment_payment_method(request):
+    if request.method == "POST":
+        payment_method_id = request.POST.get("payment-method")
+        appointment_id = request.POST.get("appointment_id")
 
-        appointment = Appointment.objects.get(id=data['appointment_id'])
-        appointment.payment_method_id = data['payment_method']
+        appointment = get_object_or_404(Appointment, id=appointment_id)
+        payment_method = get_object_or_404(PaymentMethods, id=payment_method_id)
+
+        appointment.payment_method = payment_method
         appointment.save()
 
-        return JsonResponse({'success': 'Data saved successfully'})
-    except Patient.DoesNotExist:
-        return JsonResponse({'error': 'Patient not found'}, status=404)
-    except Appointment.DoesNotExist:
-        return JsonResponse({'error': 'Appointment not found'}, status=404)
+        return JsonResponse({'message': 'Método de pagamento do agendamento atualizado com sucesso.'}, status=200)
+
+    return JsonResponse({'error': 'Método não permitido.'}, status=405)
+        

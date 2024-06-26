@@ -52,6 +52,16 @@ button span{
     fill: red;
 }
 
+.btn-green{
+    background-color: #2c7b3f;
+    border: none;
+    box-shadow: none;
+}
+
+.btn-blue{
+    background-color: #0B1A5E;
+}
+
 
 /* ===================  Bagdes ================== */
 
@@ -76,7 +86,7 @@ button span{
     background-color: #E0E6ED;
     color:#3B3F5C;
 
-    width: 0.7em;
+    width: 2em;
     height: 0.7em;
     font-size: 1em;
 
@@ -209,30 +219,49 @@ button span{
 /* =================== TableQueue ================== */
 
 .table-hover tbody tr.current-patient th:first-child {
-    background-color: #297e29e6;
+    background-color: #1280b7;
 }
 
 .table-hover tbody tr.current-patient .filled-cell {
-    background-color: #43a743e6;
+    background-color: #1280b7;
     color: white; 
 }
 
 .table-hover tbody tr.current-patient .filled-cell:hover {
-    background-color: #34c934e6;
+    background-color: #15AEFDe6;
     color: white; 
 }
 
 
 .table-hover tbody tr.current-patient td {
-    background-color: rgba(103, 239, 103, 0.365); 
+    background-color: rgba(21, 174, 253, 0.2);
     color: white;
 }
 
 .table-hover tbody tr.current-patient td:hover {
-    background-color: rgba(103, 239, 103, 0.6); 
+    background-color: rgba(21, 174, 253, 0.2); 
     color: white;
 }
 
+.current-patient-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Garante que ocupe todo o espaço disponível */
+    padding: 0 10px; /* Ajuste o padding conforme necessário */
+}
+
+.current-patient-name {
+    text-align: left;
+}
+
+.current-payment-method {
+    text-align: right;
+}
 
 /* ================ MESSAGES ==================== */
 .messages-center {

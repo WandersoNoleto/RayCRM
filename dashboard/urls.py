@@ -8,7 +8,8 @@ urlpatterns = [
     path('appointment/add', views.add_appointment, name="add_appointment"),
     path('appointments/search', views.search_appointments, name='search_appointments'),
     path('appointments/cancel/<int:appointment_id>/', views.cancel_appointment, name='cancel_appointment'),
-    path('appointments/get/<int:appointment_id>/', views.get_patient_data, name='get_patient_data'),
+    path('appointments/get/<int:appointment_id>/', views.get_appointment_data, name='get_appointment_data'),
+    path('appointments/edit-pay-method/', views.save_appointment_payment_method, name='save_appointment_payment_method'),
 
     path('patients/', views.view_patients, name="view_patients"),
     path('patients/add/', views.add_patient, name="add_patient"),
