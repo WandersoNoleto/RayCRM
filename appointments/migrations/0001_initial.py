@@ -12,17 +12,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='NextConsultDate',
+            name='Appointment',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='PaymentMethods',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=150)),
+                ('appointment_date', models.DateField()),
+                ('appointment_time', models.TimeField()),
             ],
         ),
     ]

@@ -26,7 +26,9 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'dashboard',
-    'users'
+    'users',
+    'patients',
+    'appointments'
 ]
 
 MIDDLEWARE = [
