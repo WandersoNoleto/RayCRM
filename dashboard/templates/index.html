@@ -10,14 +10,36 @@
 
 {% block "content" %}
 {% if messages %}
-    <div class="messages-center" id="messageContainer">
-        {% for message in messages %}
-            <div class="alert {{ message.tags }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                coloredToast('{{ message.tags }}', '{{ message }}');
+            {% endfor %}
+        });
+        function coloredToast(color, message) {
+            const toast = window.Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                showCloseButton: true,
+                customClass: {
+                    popup: `color-${color}`
+                },
+                target: document.getElementById(color + '-toast')
+            });
+            toast.fire({
+                title: message,
+            });
+        }
+    </script>
+
+    <div id="error-toast" class="color-error"></div>
+    <div id="success-toast" class="color-success"></div>
+    <div id="info-toast" class="color-info"></div>
+    <div id="warning-toast" class="color-warning"></div>
 {% endif %}
+
 <div class="animate__animated p-6" :class="[$store.app.animation]">
     <div class="pt-5">
         <div class="mb-5 flex items-center justify-between">
