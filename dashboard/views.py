@@ -205,7 +205,7 @@ def get_appointment_data(request, appointment_id):
         appointment = Appointment.objects.get(id=appointment_id)
         patient = appointment.patient
         payment_method_id = appointment.payment_method.id if appointment.payment_method else None
-        
+
         data = {
             'id': appointment.id,
             'name': patient.name,
@@ -233,3 +233,9 @@ def save_appointment_payment_method(request):
 
     return JsonResponse({'error': 'Método não permitido.'}, status=405)
         
+def delete_payment_method(request, id):
+    payment_method = get_object_or_404(PaymentMethods, id=id)
+
+    payment_method.delete()
+
+    return redirect('settings')

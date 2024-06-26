@@ -18,5 +18,6 @@ urlpatterns = [
     path('patients/get/<int:patient_id>/', views.get_patient, name='get_patient'),
 
     path('settings/', views.settings_view, name="settings"),
-    path('payment-methods/add', views.add_payment_method, name="add_payment_method")
+    path('payment-methods/add', views.add_payment_method, name="add_payment_method"),
+    path('payment-methods/delete/<int:id>/', views.delete_payment_method, name="delete_payment_method")
 ]

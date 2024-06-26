@@ -104,10 +104,15 @@
                                 </form>
                                 <div class="mb-5 flex flex-wrap gap-2">
                                     {% for method in payment_methods %}
-                                        <div class="badge bg-dark p-2 rounded-full">
+                                    <div class="flex justify-between align-center badge bg-dark p-2 rounded-full">
+                                        <div class="mr-2">
                                             {{ method.name }}
                                         </div>
-                                    {% endfor %}
+                                        <a href="{% url 'delete_payment_method' method.id %}">
+                                            x
+                                        </a>
+                                    </div>
+                                {% endfor %}
                                 </div>
                             </div>
                         </div>
