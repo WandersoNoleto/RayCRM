@@ -41,25 +41,21 @@ function openFinalizeQueueModal(data) {
     for (const method in data.payment_method_counts) {
         const count = data.payment_method_counts[method];
 
-        // Criando um parágrafo para cada método de pagamento
         const methodParagraph = document.createElement('p');
         methodParagraph.classList.add('font-weight-bold', 'text-center', 'end-queue-modal-stats');
 
-        // Primeiro span com o nome do método de pagamento
         const methodNameSpan = document.createElement('span');
         methodNameSpan.innerText = method;
         methodParagraph.appendChild(methodNameSpan);
 
-        // Segundo span com a quantidade de pacientes
         const countSpan = document.createElement('span');
-        countSpan.id = `${method.replace(/\s+/g, '-').toLowerCase()}-count`; // ID baseado no nome do método
+        countSpan.id = `${method.replace(/\s+/g, '-').toLowerCase()}-count`; 
         countSpan.innerText = count;
         methodParagraph.appendChild(countSpan);
 
         paymentMethodCounts.appendChild(methodParagraph);
     }
 
-    // Exibe o modal
     document.getElementById('endQueueModal').classList.remove('hidden');
 }
 
@@ -69,7 +65,7 @@ function openEndQueueModal() {
     modal.classList.remove('hidden');
 }
 
-// Função para fechar o modal
+
 function closeEndQueueModal() {
     const modal = document.getElementById('endQueueModal');
     modal.classList.add('hidden');

@@ -39,6 +39,12 @@ def view_patients(request):
 def save_new_consult_date(request):
     if request.method == "POST":
         new_date = request.POST.get("nextConsultDate")
+        current_date = NextConsultDate.objects.all().first().date
+
+        appointments = Appointment.objects.filter(date=current_date)
+        for appointment in appointments:
+            appointment.date = new_date
+            appointment.save()
 
         NextConsultDate.objects.all().delete()
         next_date = NextConsultDate(date=new_date)
