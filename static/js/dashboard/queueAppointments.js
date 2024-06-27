@@ -10,17 +10,8 @@ let waitingCount = totalAppointments+1;
 document.getElementById('treated-count').innerText = treatedCount;
 document.getElementById('waiting-count').innerText = waitingCount;
 
-// JavaScript (frontend)
 
 function startConsultationDay() {
-    document.getElementById('normalContent').classList.add('hidden');
-    document.getElementById('diaDeConsultaContent').classList.remove('hidden');
-
-    var novaAlturaEm = 38.1;
-    var novaAlturaPixels = novaAlturaEm * 16;
-    document.getElementById('tableContainer').style.maxHeight = novaAlturaPixels + 'px';
-
-    // Marca a fila como iniciada no backend
     fetch('/start_queue/', {
         method: 'GET',
     })
@@ -34,6 +25,13 @@ function startConsultationDay() {
     .catch(error => {
         console.error('Erro ao iniciar a fila:', error);
     });
+
+    document.getElementById('normalContent').classList.add('hidden');
+    document.getElementById('diaDeConsultaContent').classList.remove('hidden');
+
+    var novaAlturaEm = 38.1;
+    var novaAlturaPixels = novaAlturaEm * 16;
+    document.getElementById('tableContainer').style.maxHeight = novaAlturaPixels + 'px';
 
     highlightNextAppointment();
 }

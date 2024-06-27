@@ -75,23 +75,34 @@ document.getElementById('submitAppointmentForm').addEventListener('click', funct
     var dateInput = document.getElementById('dateStart').value;
     var date = new Date(dateInput);
 
-    if (date.getDay() !== 2) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'A data informada não é uma quarta-feira',
-            text: 'Você deseja continuar com esta data?',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Não'
-        }).then((result) => {
-            if (result.isConfirmed) {
+    fetch('/get_next_consult_date/')
+        .then(response => response.json())
+        .then(data => {
+            var nextConsultDate = new Date(data.next_consult_date);
+
+            if (date.getDay() !== 2 && date !== nextConsultDate) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'A data informada não é uma quarta-feira',
+                    text: 'Você deseja continuar com esta data?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim',
+                    cancelButtonText: 'Não'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('appointmentForm').submit();
+                    }
+                });
+            } else {
                 document.getElementById('appointmentForm').submit();
             }
+        })
+        .catch(error => {
+            console.error('Erro ao obter a próxima data de consulta:', error);
+            // Adicione uma mensagem de erro se necessário
         });
-    } else {
-        document.getElementById('appointmentForm').submit();
-    }
 });
+
 
 document.getElementById('submitEditNextConsultDateForm').addEventListener('click', function(event) {
     var dateInput = document.getElementById('nextConsultDate').value;

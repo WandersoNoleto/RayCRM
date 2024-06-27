@@ -44,12 +44,12 @@ def search_appointments(request):
     if search_date or search_name:
         if search_date and search_name:
             se_appointments = Appointment.objects.filter(
-                appointment_date=search_date,
+                appointment=search_date,
                 patient__name__icontains=search_name
             )
         elif search_date:
             se_appointments = Appointment.objects.filter(
-                appointment_date=search_date
+                appointment=search_date
             )
         elif search_name:
             se_appointments = Appointment.objects.filter(

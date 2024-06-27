@@ -87,7 +87,7 @@
                                 </div>
                                 <div class="flex justify-center">
                                     <div class="flex justify-center">                                      
-                                        {% if today_date == next_consult_date.date %}
+                                        {% if today_date == next_consult_date.date and appointments|length > 0%}
                                         
                                         <button type="button" class="btn btn-success rounded btn-green" onclick="startConsultationDay()">
                                             <svg width="1rem" height="1rem" viewBox="-0.5 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -161,7 +161,7 @@
                         
                                             <div class="mb-5">
                                                 <label for="dateStart">Data: </label>
-                                                <input name="date" id="dateStart" type="date" class="form-input" placeholder="" value="{{ event.start }}" required>
+                                                <input name="date" id="dateStart" type="date" class="form-input" placeholder="" value="{{ next_consult_date}}" required>
                                                 <div class="mt-2 text-danger" id="startDateErr"></div>
                                             </div>
                                             <div class="mb-5 flex items-center">
@@ -204,7 +204,7 @@
                                         <span id="next-consult-date"class="ml-2">{{ next_consult_date.date|date:"d/m/Y" }}</span>
                                     </div>
                                     <div class="flex">
-                                        <button type="button" class="btn btn-success rounded btn-green btn-next" onclick="goToNextAppointment()">
+                                        <button type="button" class="btn btn-success rounded btn-green btn-next" onclick="goToNextAppointment()" style="display: flex; align-items: center;">
                                             <svg width="1rem" height="1rem" viewBox="0 -2 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <g id="Dribbble-Light-Preview" transform="translate(-144.000000, -3805.000000)" fill="#fff">

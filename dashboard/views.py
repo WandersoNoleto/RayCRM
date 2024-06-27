@@ -54,6 +54,14 @@ def save_new_consult_date(request):
         next_date.save()
 
         return redirect('home')
+
+@login_required
+def get_next_consult_date(request):
+    next_consult_date = NextConsultDate.objects.first()
+    if next_consult_date:
+        return JsonResponse({'next_consult_date': next_consult_date.date.strftime('%Y-%m-%d')})
+    else:
+        return JsonResponse({'next_consult_date': None})
     
 
 @login_required
@@ -89,23 +97,26 @@ def delete_payment_method(request, id):
 def start_queue(request):
     try:
         queue_state, created = QueueState.objects.get_or_create()
-
         queue_state.is_started = True
-        print(f""""
-              {queue_state} - {queue_state.is_started}
-              """)
+
         queue_state.save()
+
         return JsonResponse({'success': 'Fila iniciada com sucesso'}, status=200)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
 @require_GET
 def update_last_treated_appointment(request, appointment_id):
+    print(f'Update_last_treated_appointment.......................{appointment_id}')
     try:
         queue_state, created = QueueState.objects.get_or_create()
         appointment = Appointment.objects.get(id=appointment_id)
+
+        queue_state.is_started = True
         queue_state.last_treated_appointment = appointment
+
         queue_state.save()
+
         return JsonResponse({'success': f'Último agendamento tratado atualizado para {appointment_id}'}, status=200)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
@@ -154,7 +165,13 @@ def finalize_queue_confirm(request):
     next_consult_date = next_consult_date_obj.date
 
 
-    Appointment.objects.filter(date=next_consult_date).delete()
+    appointments = Appointment.objects.filter(date=next_consult_date)
+    for appointment in appointments:
+        patient = appointment.patient
+        patient.last_appointment = next_consult_date
+        patient.save()
+
+    appointments.delete()
 
     next_consult_date += timedelta(days=(2 - next_consult_date.weekday()) % 7)
     if next_consult_date <= today:

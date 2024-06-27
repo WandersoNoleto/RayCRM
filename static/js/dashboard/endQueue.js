@@ -1,9 +1,8 @@
 function updateButtonVisibility() {
     const nextButton = document.querySelector('.btn-next');
     const endQueueButton = document.querySelector('.btn-end-queue');
-    console.log(waitingCount)
     if (waitingCount > 0) {
-        nextButton.style.display = 'inline-block';
+        nextButton.style.display = 'flex';
         endQueueButton.style.display = 'none';
     } else {
         nextButton.style.display = 'none';

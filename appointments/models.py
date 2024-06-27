@@ -8,4 +8,4 @@ class Appointment(models.Model):
     payment_method = models.ForeignKey('dashboard.PaymentMethods', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"Agendamento: {self.patient.name}, {self.appointment_date} às {self.appointment_time}"
+        return f"Agendamento: {self.patient.name}, {self.date} às {self.time}"
