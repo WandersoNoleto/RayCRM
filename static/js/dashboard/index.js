@@ -54,7 +54,6 @@ async function showCancelAlert(appointmentId) {
             alertElement.textContent = 'Agendamento cancelado com sucesso!';
             document.body.appendChild(alertElement);
     
-            // Remover a mensagem após alguns segundos
             setTimeout(() => {
                 alertElement.remove();
             }, 5000);
@@ -79,8 +78,11 @@ document.getElementById('submitAppointmentForm').addEventListener('click', funct
         .then(response => response.json())
         .then(data => {
             var nextConsultDate = new Date(data.next_consult_date);
+            console.log(date.getTime() == nextConsultDate.getTime())
+            console.log(date)
+            console.log(nextConsultDate)
 
-            if (date.getDay() !== 2 && date !== nextConsultDate) {
+            if (date.getDay() !== 2 && date.getTime() !== nextConsultDate.getTime()) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'A data informada não é uma quarta-feira',
@@ -99,7 +101,6 @@ document.getElementById('submitAppointmentForm').addEventListener('click', funct
         })
         .catch(error => {
             console.error('Erro ao obter a próxima data de consulta:', error);
-            // Adicione uma mensagem de erro se necessário
         });
 });
 

@@ -17,6 +17,7 @@ def home(request):
     appointments = Appointment.objects.filter(date=next_consult_date.date)
     payment_methods = PaymentMethods.objects.all()
     today_date = date.today()
+    se_appointments = request.session.pop('se_appointments', [])
 
     context = {
         'patients': patients,
@@ -25,6 +26,7 @@ def home(request):
         'appointments': appointments,
         'payment_methods': payment_methods,
         'today_date': today_date,
+        'se_appointments': se_appointments,
     }
     return render(request, 'index.html', context=context)
 

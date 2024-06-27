@@ -345,7 +345,7 @@
                     
                     </div>
                     <div class="panel mb-5 xl:w-full" id="searchPanel">
-                        <form id="searchForm">
+                        <form id="searchForm" action="{% url "search_appointments" %}" method="GET">
                             <div class="r">
                                 <h3 class="mb-5 font-bold text-lg text-center">Procurar agendamento</h3>
                                 <label for="search-date">Por data</label>
@@ -370,7 +370,28 @@
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="appointmentsTableBody">
+                                <tbody>
+                                    {% if not se_appointments %}
+                                        <tr>
+                                            <td colspan="4" class="text-center">Nenhum agendamento encontrado</td>
+                                        </tr>
+                                    {% else %}
+                                        {% for se_appointment in se_appointments %}
+                                        <tr>
+                                            <td class="text-center appointment-date">{{ se_appointment.date }}</td>
+                                            <td class="text-center appointment-time">{{ se_appointment.time }}</td>
+                                            <td class="patient-name">{{ se_appointment.patient }}</td>
+                                            <td class="text-center">
+                                                <button onclick="showCancelAlert({{ se_appointment.id }})" class="cancel-appointment">
+                                                    <!-- Ícone de exclusão -->
+                                                    <svg class="btn-svg" fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M5.755,20.283,4,8H20L18.245,20.283A2,2,0,0,1,16.265,22H7.735A2,2,0,0,1,5.755,20.283ZM21,4H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V4H3A1,1,0,0,0,3,6H21a1,1,0,0,0,0-2Z"/>
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>

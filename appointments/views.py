@@ -36,7 +36,6 @@ def add_appointment(request):
 
 @login_required
 def search_appointments(request):
-    print("hello")
     search_date = request.GET.get('search-date')
     search_name = request.GET.get('search-name')
     se_appointments = []
@@ -44,12 +43,12 @@ def search_appointments(request):
     if search_date or search_name:
         if search_date and search_name:
             se_appointments = Appointment.objects.filter(
-                appointment=search_date,
+                date=search_date,
                 patient__name__icontains=search_name
             )
         elif search_date:
             se_appointments = Appointment.objects.filter(
-                appointment=search_date
+                date=search_date
             )
         elif search_name:
             se_appointments = Appointment.objects.filter(
@@ -59,13 +58,14 @@ def search_appointments(request):
     appointments_data = []
     for appointment in se_appointments:
         appointments_data.append({
-            'appointment_date': appointment.date.strftime('%d/%m/%Y'),
-            'appointment_time': appointment.time.strftime('%H:%M'),
-            'patient_name': appointment.patient.name,
-            'appointment_id': appointment.id  # Incluímos o ID para o botão de cancelar
+            'date': appointment.date.strftime('%d/%m/%Y'),
+            'time': appointment.time.strftime('%H:%M'),
+            'patient': appointment.patient.name,
+            'id': appointment.id
         })
 
-    return JsonResponse(appointments_data, safe=False)
+    request.session['se_appointments'] = appointments_data
+    return redirect('home')
 
 @login_required
 def cancel_appointment(request, appointment_id):
