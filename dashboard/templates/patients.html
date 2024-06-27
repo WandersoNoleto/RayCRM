@@ -27,7 +27,7 @@
                 <div class="flex gap-3">
                     <div>
                         <div x-data="patientHandler()">
-                            <button type="button" class="btn btn-primary" onclick="openAddModal()">
+                            <button type="button" class="btn btn-primary btn-blue" onclick="openAddModal()">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ltr:mr-2 rtl:ml-2">
                                     <circle cx="10" cy="6" r="4" stroke="currentColor" stroke-width="1.5"></circle>
                                     <path opacity="0.5" d="M18 17.5C18 19.9853 18 22 10 22C2 22 2 19.9853 2 17.5C2 15.0147 5.58172 13 10 13C14.4183 13 18 15.0147 18 17.5Z" stroke="currentColor" stroke-width="1.5"></path>
@@ -105,7 +105,7 @@
                             <tr>
                                 <td>
                                     <div class="flex w-max items-center">
-                                        <div class="grid h-8 w-8 place-content-center rounded-full bg-primary text-sm font-semibold text-white ltr:mr-2 rtl:ml-2">
+                                        <div class="grid h-8 w-8 place-content-center rounded-full bg-blue text-sm font-semibold text-white ltr:mr-2 rtl:ml-2">
                                             {{ patient.name|slice:":1"|capfirst }}
                                         </div>
                                         <div>{{ patient.name }}</div>

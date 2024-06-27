@@ -65,6 +65,29 @@ button span{
     background-color: #0B1A5E;
 }
 
+.btn-history-consult-day {
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+}
+
+.btn-history-consult-day::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, white, #4D69EF, white);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.btn-history-consult-day:hover::after {
+    width: 100%;
+    left: 0;
+}
 
 /* ===================  Bagdes ================== */
 
@@ -293,4 +316,55 @@ button span{
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+/* ============ HistoryModal ================== */
+.title-history-modal{
+    display: flex;
+    justify-content: center;
+}
+
+.card-container .panel{
+    padding: 0;
+}
+
+.card-custom-header {
+    font-size: 1rem;
+    font-weight: bold;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom: 1px solid transparent;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    background-color: #0B1A5E;
+    color: white;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.card-custom-body {
+    font-weight: bold;
+    padding: 1rem;
+    color: #E0E6ED;
+}
+
+.card-container {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    max-height: 30rem;
+}
+
+.card-container .panel {
+    background-color: #f2f2f263;
+}
+
+.card-container .card {
+    margin-bottom: 1rem;
+}
+
+.card-container .card:last-child {
+    margin-bottom: 0;
 }

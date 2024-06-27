@@ -76,6 +76,13 @@
     font-size: 1rem;
 }
 
+.end-queue-modal-stats li {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
 .payment-stats-header{
     padding-top: 1.2rem;
     font-size: 1rem;

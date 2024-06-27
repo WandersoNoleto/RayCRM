@@ -65,6 +65,14 @@
     <div class="pt-5">
         <div class="mb-5 flex items-center justify-between">
             <h5 class="text-lg font-semibold dark:text-white-light">Consultas</h5>
+            <span id="historyTrigger" class="text-primary mr-3 btn-history-consult-day" onclick="openHistoryModal()" style="cursor: pointer; display: flex; align-items: center;">
+                <svg width="1rem" height="1rem" viewBox="0 0 668 668" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
+                    <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#4D69EF" stroke="#4D69EF" stroke-width="33.3333"/>
+                    <path d="M34 234V600.667C34 609.507 37.5119 617.986 43.7631 624.237C50.0143 630.488 58.4928 634 67.3333 634H600.667C609.507 634 617.986 630.488 624.237 624.237C630.488 617.986 634 609.507 634 600.667V234M34 234H634M34 234V100.667C34 91.8261 37.5119 83.3477 43.7631 77.0964C50.0143 70.8452 58.4928 67.3333 67.3333 67.3333H600.667C609.507 67.3333 617.986 70.8452 624.237 77.0964C630.488 83.3477 634 91.8261 634 100.667V234M467.333 34V134M200.667 34V134" stroke="#4D69EF" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M234 434L300.667 500.666L434 367.333" stroke="white" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Ver histórico
+            </span>
         </div>
         <!-- start main content section -->
         <div class="flex flex-col gap-2.5 w-full xl:flex-row ">
@@ -409,8 +417,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <svg width="2rem" height="2rem" viewBox="0 0 668 668" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
-                    <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#0E1726" stroke="#0E1726" stroke-width="33.3333"/>
-                    <path d="M34 234V600.667C34 609.507 37.5119 617.986 43.7631 624.237C50.0143 630.488 58.4928 634 67.3333 634H600.667C609.507 634 617.986 630.488 624.237 624.237C630.488 617.986 634 609.507 634 600.667V234M34 234H634M34 234V100.667C34 91.8261 37.5119 83.3477 43.7631 77.0964C50.0143 70.8452 58.4928 67.3333 67.3333 67.3333H600.667C609.507 67.3333 617.986 70.8452 624.237 77.0964C630.488 83.3477 634 91.8261 634 100.667V234M467.333 34V134M200.667 34V134" stroke="#0E1726" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#4D69EF" stroke="#4D69EF" stroke-width="33.3333"/>
+                    <path d="M34 234V600.667C34 609.507 37.5119 617.986 43.7631 624.237C50.0143 630.488 58.4928 634 67.3333 634H600.667C609.507 634 617.986 630.488 624.237 624.237C630.488 617.986 634 609.507 634 600.667V234M34 234H634M34 234V100.667C34 91.8261 37.5119 83.3477 43.7631 77.0964C50.0143 70.8452 58.4928 67.3333 67.3333 67.3333H600.667C609.507 67.3333 617.986 70.8452 624.237 77.0964C630.488 83.3477 634 91.8261 634 100.667V234M467.333 34V134M200.667 34V134" stroke="#4D69EF" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M234 434L300.667 500.666L434 367.333" stroke="white" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <h5 class="modal-title">Finalizar Atendimento</h5>
@@ -439,6 +447,47 @@
     </div>
 </div>
 
+<div class="modal fade hidden" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header title-history-modal">
+                <h5 class="modal-title" id="historyModalLabel">Histórico de Atendimentos</h5>
+                <button type="button" class="btn-close" onclick="closeHistoryModal()" aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-container">
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        {% for summary in consultation_day_summaries %}
+                        <div class="panel col mb-6">
+                            <div class="card">
+                                <div class="card-custom-header">
+                                    <svg width="1rem" height="1rem" viewBox="0 0 668 668" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
+                                        <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#fff" stroke="#fff" stroke-width="33.3333"/>
+                                        <path d="M34 234V600.667C34 609.507 37.5119 617.986 43.7631 624.237C50.0143 630.488 58.4928 634 67.3333 634H600.667C609.507 634 617.986 630.488 624.237 624.237C630.488 617.986 634 609.507 634 600.667V234M34 234H634M34 234V100.667C34 91.8261 37.5119 83.3477 43.7631 77.0964C50.0143 70.8452 58.4928 67.3333 67.3333 67.3333H600.667C609.507 67.3333 617.986 70.8452 624.237 77.0964C630.488 83.3477 634 91.8261 634 100.667V234M467.333 34V134M200.667 34V134" stroke="#fff" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M234 434L300.667 500.666L434 367.333" stroke="white" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <h5 class="card-title">{{ summary.consultation_date|date:"d/m/Y" }}</h5>
+                                </div>
+                                <div class="card-custom-body">
+                                    <p class="card-text font-weight-bold  end-queue-modal-stats ">Total de Pacientes: <span>{{ summary.total_patients }}</span></p>
+                                    <ul class="ist-unstyled d-flex flex-wrap justify-content-center">
+                                        {% for method, count in summary.payment_method_counts.items %}
+                                        <p class="font-weight-bold text-center end-queue-modal-stats">
+                                            <span class="rounded-pill">{{ method }}</span>
+                                            <span class="rounded-pill">{{ count }}</span>
+                                        </p>
+                                        {% endfor %}
+                                    </ul>                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -449,6 +498,8 @@
 <script src="{% static "js/dashboard/setPaymentMehod.js" %}"></script>
 <script src="{% static "js/dashboard/checkHomeState.js" %}"></script>
 <script src="{% static "js/dashboard/endQueue.js" %}"></script>
+<script src="{% static "js/dashboard/historyModal.js" %}"></script>
+
 
 <script>
     function closeModal() {

@@ -9,3 +9,11 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Agendamento: {self.patient.name}, {self.date} às {self.time}"
+    
+class ConsultationDaySummary(models.Model):
+    consultation_date = models.DateField()
+    total_patients = models.IntegerField()
+    payment_method_counts = models.JSONField()  
+
+    def __str__(self):
+        return f"Consultation Summary for {self.consultation_date}"

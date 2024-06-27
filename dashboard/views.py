@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import NextConsultDate, PaymentMethods
-from appointments.models import Appointment
+from appointments.models import Appointment, ConsultationDaySummary
 from patients.models import Patient
 from django.db.models.functions import Lower
 from django.http import JsonResponse
@@ -18,6 +18,7 @@ def home(request):
     payment_methods = PaymentMethods.objects.all()
     today_date = date.today()
     se_appointments = request.session.pop('se_appointments', [])
+    consultation_day_summaries = ConsultationDaySummary.objects.all()
 
     context = {
         'patients': patients,
@@ -27,6 +28,7 @@ def home(request):
         'payment_methods': payment_methods,
         'today_date': today_date,
         'se_appointments': se_appointments,
+        'consultation_day_summaries': consultation_day_summaries
     }
     return render(request, 'index.html', context=context)
 
@@ -137,6 +139,8 @@ def check_queue_state(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+
+
 def finalize_queue(request):
     try:
         queue_date = NextConsultDate.objects.all().first().date
@@ -158,16 +162,50 @@ def finalize_queue(request):
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-    
+
+
+
+def add_consultation_day_summary():
+    print("in consult")
+    try:
+        queue_date = NextConsultDate.objects.all().first().date
+        total_patients = Appointment.objects.filter(date=queue_date).count()
+
+        payment_method_counts = {}
+        appointments = Appointment.objects.filter(date=queue_date)
+
+        for appointment in appointments:
+            method = appointment.payment_method
+            if method:
+                if method.name in payment_method_counts:
+                    payment_method_counts[method.name] += 1
+                else:
+                    payment_method_counts[method.name] = 1
+        
+        consultation_day_summary = ConsultationDaySummary(
+            consultation_date = queue_date,
+            total_patients = total_patients,
+            payment_method_counts = payment_method_counts
+        )
+
+        print("aaa")
+
+        consultation_day_summary.save()
+        print(f"{consultation_day_summary.date} - {consultation_day_summary.total_patients} - {consultation_day_summary.payment_method_counts}")
+
+        return redirect("home")
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
 def finalize_queue_confirm(request):
+    add_consultation_day_summary()
+
     today = datetime.today().date()
-
-
     next_consult_date_obj = NextConsultDate.objects.first()
     next_consult_date = next_consult_date_obj.date
-
-
     appointments = Appointment.objects.filter(date=next_consult_date)
+
     for appointment in appointments:
         patient = appointment.patient
         patient.last_appointment = next_consult_date
