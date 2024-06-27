@@ -4,9 +4,13 @@ from .models import NextConsultDate, PaymentMethods
 from appointments.models import Appointment
 from patients.models import Patient
 from django.db.models.functions import Lower
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .models import QueueState
 
 @login_required
 def home(request):
+    queue_state = request.session.get('queue_state', {'is_started': False})
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter
@@ -14,6 +18,7 @@ def home(request):
 
     context = {
         'patients': patients,
+        'queue_state': queue_state,
         'next_consult_date': next_consult_date,
         'appointments': appointments,
         'payment_methods': payment_methods
@@ -69,3 +74,40 @@ def delete_payment_method(request, id):
     payment_method.delete()
 
     return redirect('settings')
+
+
+@require_GET
+def start_queue(request):
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        queue_state.is_started = True
+        queue_state.save()
+        return JsonResponse({'success': 'Fila iniciada com sucesso'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_GET
+def update_last_treated_appointment(request, appointment_id):
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        appointment = Appointment.objects.get(id=appointment_id)
+        queue_state.last_treated_appointment = appointment
+        queue_state.save()
+        return JsonResponse({'success': f'Último agendamento tratado atualizado para {appointment_id}'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_GET
+def check_queue_state(request):
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        return JsonResponse({
+            'is_started': queue_state.is_started,
+            'last_treated_appointment': {
+                'id': queue_state.last_treated_appointment.id,
+                'patient_name': queue_state.last_treated_appointment.patient.name if queue_state.last_treated_appointment else None
+            } if queue_state.last_treated_appointment else None
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+

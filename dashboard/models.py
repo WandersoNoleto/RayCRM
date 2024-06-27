@@ -1,6 +1,5 @@
 from django.db import models
-from users.models import Clinic
-from datetime import datetime, timedelta
+from appointments.models import Appointment
   
 class PaymentMethods(models.Model):
     name = models.CharField(max_length=150)
@@ -20,5 +19,17 @@ class NextConsultDate(models.Model):
 
     def __str__(self):
         return str(self.date)
+    
+class QueueState(models.Model):
+    is_started = models.BooleanField(default=False)
+    last_treated_appointment = models.ForeignKey(
+        Appointment,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"Queue State - Started: {self.is_started}"
     
 
