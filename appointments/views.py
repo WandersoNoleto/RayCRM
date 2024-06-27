@@ -24,11 +24,11 @@ def add_appointment(request):
         time_str = f"{hour}:{minute}"
         time_obj = datetime.strptime(time_str, "%H:%M").time()
 
-        if Appointment.objects.filter(appointment_date=date, appointment_time=time_obj).exists():
+        if Appointment.objects.filter(date=date, time=time_obj).exists():
             messages.error(request, "Não foi possível! Já existe um agendamento para esse horário, tente novamente")
             return redirect('home') 
 
-        appointment = Appointment(patient=patient, appointment_date=date, appointment_time=time_obj)
+        appointment = Appointment(patient=patient, date=date, time=time_obj)
         appointment.save()
 
         return redirect('home')
@@ -59,8 +59,8 @@ def search_appointments(request):
     appointments_data = []
     for appointment in se_appointments:
         appointments_data.append({
-            'appointment_date': appointment.appointment_date.strftime('%d/%m/%Y'),
-            'appointment_time': appointment.appointment_time.strftime('%H:%M'),
+            'appointment_date': appointment.date.strftime('%d/%m/%Y'),
+            'appointment_time': appointment.time.strftime('%H:%M'),
             'patient_name': appointment.patient.name,
             'appointment_id': appointment.id  # Incluímos o ID para o botão de cancelar
         })

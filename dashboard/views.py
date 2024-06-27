@@ -7,21 +7,24 @@ from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from .models import QueueState
+from datetime import datetime, timedelta, date
 
 @login_required
 def home(request):
     queue_state = request.session.get('queue_state', {'is_started': False})
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
-    appointments = Appointment.objects.filter
+    appointments = Appointment.objects.filter(date=next_consult_date.date)
     payment_methods = PaymentMethods.objects.all()
+    today_date = date.today()
 
     context = {
         'patients': patients,
         'queue_state': queue_state,
         'next_consult_date': next_consult_date,
         'appointments': appointments,
-        'payment_methods': payment_methods
+        'payment_methods': payment_methods,
+        'today_date': today_date,
     }
     return render(request, 'index.html', context=context)
 
@@ -86,7 +89,11 @@ def delete_payment_method(request, id):
 def start_queue(request):
     try:
         queue_state, created = QueueState.objects.get_or_create()
+
         queue_state.is_started = True
+        print(f""""
+              {queue_state} - {queue_state.is_started}
+              """)
         queue_state.save()
         return JsonResponse({'success': 'Fila iniciada com sucesso'}, status=200)
     except Exception as e:
@@ -138,3 +145,30 @@ def finalize_queue(request):
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def finalize_queue_confirm(request):
+    today = datetime.today().date()
+
+
+    next_consult_date_obj = NextConsultDate.objects.first()
+    next_consult_date = next_consult_date_obj.date
+
+
+    Appointment.objects.filter(date=next_consult_date).delete()
+
+    next_consult_date += timedelta(days=(2 - next_consult_date.weekday()) % 7)
+    if next_consult_date <= today:
+        next_consult_date += timedelta(days=7)
+
+    while next_consult_date.weekday() != 2:
+        next_consult_date += timedelta(days=1)
+
+    next_consult_date_obj.date = next_consult_date
+    next_consult_date_obj.save()
+
+    queue_state = QueueState.objects.all().first()
+    queue_state.is_started = False
+    queue_state.last_treated_appointment_id = None
+    queue_state.save()
+
+    return redirect('home')

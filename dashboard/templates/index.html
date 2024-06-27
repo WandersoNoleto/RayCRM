@@ -41,6 +41,26 @@
     <div id="warning-toast" class="color-warning"></div>
 {% endif %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/check_queue_state/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.is_started == true && data.last_treated_appointment) {
+                    document.getElementById('normalContent').classList.add('hidden');
+                    document.getElementById('diaDeConsultaContent').classList.remove('hidden');
+                    startHighlightFromAppointment(data.last_treated_appointment.id);
+                } else {
+                    document.getElementById('normalContent').classList.remove('hidden');
+                    document.getElementById('diaDeConsultaContent').classList.add('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao obter o estado da fila:', error);
+            });
+        });
+</script>
+
 <div class="animate__animated p-6" :class="[$store.app.animation]">
     <div class="pt-5">
         <div class="mb-5 flex items-center justify-between">
@@ -66,7 +86,9 @@
                                     </div>
                                 </div>
                                 <div class="flex justify-center">
-                                    <div class="flex justify-center">
+                                    <div class="flex justify-center">                                      
+                                        {% if today_date == next_consult_date.date %}
+                                        
                                         <button type="button" class="btn btn-success rounded btn-green" onclick="startConsultationDay()">
                                             <svg width="1rem" height="1rem" viewBox="-0.5 0 7 7" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -79,6 +101,8 @@
                                             </svg>
                                             <span class="ml-2">Iniciar atendimento</span>
                                         </button>
+                                    {% endif %}
+                                    
                                     </div>
                                     <button type="button" class="ml-2 btn btn-appointment" onclick="editEvent()">
                                         <svg width="1rem" height="1rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
@@ -382,12 +406,13 @@
                 </ul>
             </div>
             <div class="modal-footer text-center">
-                <button type="button" class="btn btn-success rounded btn-green btn-end-queue" onclick="closeEndQueueModal()" style="display: none; display: flex; align-items: center;">
+                <button type="button" class="btn btn-success rounded btn-green btn-end-queue" onclick="window.location.href='{% url 'finalize_queue_confirm' %}'" style="display: none; display: flex; align-items: center;">
                     <svg width="1rem" height="1rem" viewBox="0 0 800 668" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
                         <path d="M669.491 0L261.865 407.627L129.661 275.424L0 405.085L132.203 537.289L262.711 667.797L392.373 538.135L800 130.509L669.491 0Z" fill="white"/>
                     </svg>
                     <span class="ml-2">Finalizar</span>
                 </button>
+                
             </div>
         </div>
     </div>

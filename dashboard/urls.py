@@ -8,6 +8,7 @@ urlpatterns = [
     path('update_last_treated_appointment/<int:appointment_id>/', views.update_last_treated_appointment, name='update_last_treated_appointment'),
     path('check_queue_state/', views.check_queue_state, name='check_queue_status'),
     path('finalize_queue/', views.finalize_queue, name='finalize_queue'),
+    path('finalize_queue_confirm/', views.finalize_queue_confirm, name='finalize_queue_confirm'),
 
     path('settings/', views.settings_view, name="settings"),
     path('payment-methods/add', views.add_payment_method, name="add_payment_method"),
