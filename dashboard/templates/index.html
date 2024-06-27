@@ -4,6 +4,7 @@
 
 {% block "head" %}
     <link rel="stylesheet" href="{% static "css/dashboard/index-view.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard/end-modal.css" %}">
 {% endblock "head" %}
 
 {% block "title" %}Início{% endblock "title" %}
@@ -179,7 +180,7 @@
                                         <span id="next-consult-date"class="ml-2">{{ next_consult_date.date|date:"d/m/Y" }}</span>
                                     </div>
                                     <div class="flex">
-                                        <button type="button" class="btn btn-success rounded btn-green" onclick="goToNextAppointment()">
+                                        <button type="button" class="btn btn-success rounded btn-green btn-next" onclick="goToNextAppointment()">
                                             <svg width="1rem" height="1rem" viewBox="0 -2 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                                 <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                                     <g id="Dribbble-Light-Preview" transform="translate(-144.000000, -3805.000000)" fill="#fff">
@@ -188,9 +189,16 @@
                                                         </g>
                                                     </g>
                                                 </g>
-                                            </svg>
                                             <span class="ml-2">Próximo</span>
                                         </button>
+
+                                        <button type="button" class="btn btn-success rounded btn-green btn-end-queue" onclick="finalizeQueue()" style="display: none; display: flex; align-items: center;">
+                                            <svg width="1rem" height="1rem" viewBox="0 0 800 668" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                                <path d="M669.491 0L261.865 407.627L129.661 275.424L0 405.085L132.203 537.289L262.711 667.797L392.373 538.135L800 130.509L669.491 0Z" fill="white"/>
+                                            </svg>
+                                            <span class="ml-2">Finalizar</span>
+                                        </button>
+                                        
                                         <button type="button" class="ml-2 btn btn-appointment" onclick="editEvent()">
                                             <svg width="1rem" height="1rem" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
                                                 <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-362.000000, -1037.000000)" fill="#fff">
@@ -350,12 +358,51 @@
         <!-- end main content section -->
 </div>
 
+<!-- Modal End Queue-->
+<div class="modal hidden" id="endQueueModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg width="2rem" height="2rem" viewBox="0 0 668 668" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
+                    <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#0E1726" stroke="#0E1726" stroke-width="33.3333"/>
+                    <path d="M34 234V600.667C34 609.507 37.5119 617.986 43.7631 624.237C50.0143 630.488 58.4928 634 67.3333 634H600.667C609.507 634 617.986 630.488 624.237 624.237C630.488 617.986 634 609.507 634 600.667V234M34 234H634M34 234V100.667C34 91.8261 37.5119 83.3477 43.7631 77.0964C50.0143 70.8452 58.4928 67.3333 67.3333 67.3333H600.667C609.507 67.3333 617.986 70.8452 624.237 77.0964C630.488 83.3477 634 91.8261 634 100.667V234M467.333 34V134M200.667 34V134" stroke="#0E1726" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M234 434L300.667 500.666L434 367.333" stroke="white" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h5 class="modal-title">Finalizar Atendimento</h5>
+                <button type="button" class="close-end-queue-modal" onclick="closeEndQueueModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="font-weight-bold text-center end-queue-modal-stats">
+                    <span>Total de Pacientes:</span>
+                    <span id="totalPatients"></span>
+                </p>
+                
+                <p class="font-weight-bold text-center payment-stats-header">Formas de pagamento</p>
+                <ul id="paymentMethodCounts" class="list-unstyled d-flex flex-wrap justify-content-center">
+                </ul>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-success rounded btn-green btn-end-queue" onclick="closeEndQueueModal()" style="display: none; display: flex; align-items: center;">
+                    <svg width="1rem" height="1rem" viewBox="0 0 800 668" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                        <path d="M669.491 0L261.865 407.627L129.661 275.424L0 405.085L132.203 537.289L262.711 667.797L392.373 538.135L800 130.509L669.491 0Z" fill="white"/>
+                    </svg>
+                    <span class="ml-2">Finalizar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static "js/dashboard/index.js" %}"></script>
 <script src="{% static "js/dashboard/queueAppointments.js" %}"></script>
 <script src="{% static "js/dashboard/patientPanel.js" %}"></script>
 <script src="{% static "js/dashboard/setPaymentMehod.js" %}"></script>
 <script src="{% static "js/dashboard/checkHomeState.js" %}"></script>
+<script src="{% static "js/dashboard/endQueue.js" %}"></script>
 
 <script>
     function closeModal() {

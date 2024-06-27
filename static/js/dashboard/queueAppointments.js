@@ -72,6 +72,7 @@ function highlightNextAppointment() {
     if (!found) {
         currentAppointmentIndex = -1;
     }
+    updateButtonVisibility()
 }
 
 
@@ -87,7 +88,7 @@ function startHighlightFromAppointment(startAppointmentId) {
             fetchPatientData(appointmentId);
             currentAppointmentIndex = i;
             found = true;
-
+            appointmentRows[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
             for (let j = i + 1; j < appointmentRows.length; j++) {
                 const filledCell = appointmentRows[j].querySelector('.filled-cell');
                 if (filledCell) {
@@ -120,6 +121,7 @@ function startHighlightFromAppointment(startAppointmentId) {
     var novaAlturaPixels = novaAlturaEm * 16;
 
     document.getElementById('tableContainer').style.maxHeight = novaAlturaPixels + 'px';
+    updateButtonVisibility()
 }
 
 

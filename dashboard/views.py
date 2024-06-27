@@ -111,3 +111,24 @@ def check_queue_state(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+def finalize_queue(request):
+    try:
+        queue_date = NextConsultDate.objects.all().first().date
+        total_patients = Appointment.objects.filter(date=queue_date).count()
+
+        payment_method_counts = {}
+        appointments = Appointment.objects.filter(date=queue_date)
+        for appointment in appointments:
+            method = appointment.payment_method
+            if method:
+                if method.name in payment_method_counts:
+                    payment_method_counts[method.name] += 1
+                else:
+                    payment_method_counts[method.name] = 1
+        
+        return JsonResponse({
+            'total_patients': total_patients,
+            'payment_method_counts': payment_method_counts,
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
