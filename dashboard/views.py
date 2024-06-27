@@ -1,25 +1,37 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Patient, Appointment, NextConsultDate
-from django.contrib import messages
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse
-import json
+from .models import NextConsultDate, PaymentMethods
+from appointments.models import Appointment, ConsultationDaySummary
+from patients.models import Patient
 from django.db.models.functions import Lower
-from datetime import datetime
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .models import QueueState
+from datetime import datetime, timedelta, date
 
 @login_required
 def home(request):
+    queue_state = request.session.get('queue_state', {'is_started': False})
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
-    appointments = Appointment.objects.filter
+    appointments = Appointment.objects.filter(date=next_consult_date.date)
+    payment_methods = PaymentMethods.objects.all()
+    today_date = date.today()
+    se_appointments = request.session.pop('se_appointments', [])
+    consultation_day_summaries = ConsultationDaySummary.objects.all()
 
     context = {
         'patients': patients,
+        'queue_state': queue_state,
         'next_consult_date': next_consult_date,
-        'appointments': appointments
+        'appointments': appointments,
+        'payment_methods': payment_methods,
+        'today_date': today_date,
+        'se_appointments': se_appointments,
+        'consultation_day_summaries': consultation_day_summaries
     }
     return render(request, 'index.html', context=context)
+
 
 @login_required
 def view_patients(request):
@@ -31,141 +43,189 @@ def view_patients(request):
     return render(request, 'patients.html', context=context)
 
 @login_required
-def add_patient(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            name = data.get('name')
-            phone = data.get('phone')
-            birth_date = data.get('birth_date')
-            address = data.get('address')
-            clinic = request.user.clinic
-
-            print(name, phone, birth_date, address, clinic)
-
-            patient = Patient(
-                name=name,
-                phone=phone, 
-                birth_date=birth_date,
-                address=address,
-                clinic=clinic
-            )
-
-            patient.save()
-            messages.success(request, 'Paciente adicionado com sucesso!')
-
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            print(e)
-            return JsonResponse({'status': 'error', 'message': str(e)})
-
-    return redirect('view_patients')
-
-@login_required
-def get_patient(request, patient_id):
-    patient = Patient.objects.get(id=patient_id)
-    data = {
-        'id': patient.id,
-        'name': patient.name,
-        'phone': patient.phone,
-        'birth_date': patient.birth_date,
-        'address': patient.address,
-    }
-    return JsonResponse(data)
-
-
-@login_required
-def edit_patient(request, patient_id):
-    if request.method == 'PUT':
-        data = json.loads(request.body)
-        patient = Patient.objects.get(id=patient_id)
-        patient.name = data['name']
-        print(patient.name)
-        patient.phone = data['phone']
-        patient.birth_date = data['birth_date']
-        patient.address = data['address']
-        patient.save()
-
-        return JsonResponse({'status': 'success'})
-
-@login_required 
-def delete_patient(request, patient_id):
-    print(patient_id)
-    patient = get_object_or_404(Patient, id=patient_id)
-    patient.delete()
-
-    return JsonResponse({'status': 'success'})
-
-@login_required
 def save_new_consult_date(request):
     if request.method == "POST":
         new_date = request.POST.get("nextConsultDate")
+        current_date = NextConsultDate.objects.all().first().date
+
+        appointments = Appointment.objects.filter(date=current_date)
+        for appointment in appointments:
+            appointment.date = new_date
+            appointment.save()
 
         NextConsultDate.objects.all().delete()
         next_date = NextConsultDate(date=new_date)
         next_date.save()
 
         return redirect('home')
-    
+
 @login_required
-def add_appointment(request):
-    if request.method == "POST":
-        patient_id = request.POST.get("patient")
-        date = request.POST.get("date")
-        hour = request.POST.get("hour")
-        minute = request.POST.get("minute")
-
-        patient = get_object_or_404(Patient, id=patient_id)
-
-        time_str = f"{hour}:{minute}"
-        time_obj = datetime.strptime(time_str, "%H:%M").time()
-
-        if Appointment.objects.filter(appointment_date=date, appointment_time=time_obj).exists():
-            messages.error(request, "Não foi possível! Já existe um agendamento para esse horário, tente novamente")
-            return redirect('home') 
-
-        appointment = Appointment(patient=patient, appointment_date=date, appointment_time=time_obj)
-        appointment.save()
-
-        return redirect('home')
+def get_next_consult_date(request):
+    next_consult_date = NextConsultDate.objects.first()
+    if next_consult_date:
+        return JsonResponse({'next_consult_date': next_consult_date.date.strftime('%Y-%m-%d')})
+    else:
+        return JsonResponse({'next_consult_date': None})
     
+
 @login_required
-def search_appointments(request):
-    next_consult_date = NextConsultDate.objects.all().first()
-    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
-    appointments = Appointment.objects.filter
-    
-    search_date = request.GET.get('search-date')
-    search_name = request.GET.get('search-name')
-    se_appointments = []
+def settings_view(request):
+    payment_methods = PaymentMethods.objects.all()
 
-    if search_date or search_name:
-        if search_date and search_name:
-            se_appointments = Appointment.objects.filter(
-                appointment_date=search_date,
-                patient__name__icontains=search_name
-            )
-        elif search_date:
-            se_appointments = Appointment.objects.filter(
-                appointment_date=search_date
-            )
-        elif search_name:
-            se_appointments = Appointment.objects.filter(
-                patient__name__icontains=search_name
-            )
-
-    context = {
-        'patients': patients,
-        'next_consult_date': next_consult_date,
-        'appointments': appointments,
-        'se_appointments': se_appointments
+    context={
+        'payment_methods': payment_methods
     }
 
-    return render(request, 'index.html', context=context)
+    return render(request, 'settings.html', context)
 
-@login_required
-def cancel_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id)
-    appointment.delete()
 
-    return JsonResponse({'status': 'success'})
+def add_payment_method(request):
+    if request.method == "POST":
+        name = request.POST.get("payment_method")
+
+        payment_method = PaymentMethods(name=name)
+        payment_method.save()
+
+        return redirect('settings')
+
+        
+def delete_payment_method(request, id):
+    payment_method = get_object_or_404(PaymentMethods, id=id)
+
+    payment_method.delete()
+
+    return redirect('settings')
+
+
+@require_GET
+def start_queue(request):
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        queue_state.is_started = True
+
+        queue_state.save()
+
+        return JsonResponse({'success': 'Fila iniciada com sucesso'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_GET
+def update_last_treated_appointment(request, appointment_id):
+    print(f'Update_last_treated_appointment.......................{appointment_id}')
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        appointment = Appointment.objects.get(id=appointment_id)
+
+        queue_state.is_started = True
+        queue_state.last_treated_appointment = appointment
+
+        queue_state.save()
+
+        return JsonResponse({'success': f'Último agendamento tratado atualizado para {appointment_id}'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@require_GET
+def check_queue_state(request):
+    try:
+        queue_state, created = QueueState.objects.get_or_create()
+        return JsonResponse({
+            'is_started': queue_state.is_started,
+            'last_treated_appointment': {
+                'id': queue_state.last_treated_appointment.id,
+                'patient_name': queue_state.last_treated_appointment.patient.name if queue_state.last_treated_appointment else None
+            } if queue_state.last_treated_appointment else None
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+
+def finalize_queue(request):
+    try:
+        queue_date = NextConsultDate.objects.all().first().date
+        total_patients = Appointment.objects.filter(date=queue_date).count()
+
+        payment_method_counts = {}
+        appointments = Appointment.objects.filter(date=queue_date)
+        for appointment in appointments:
+            method = appointment.payment_method
+            if method:
+                if method.name in payment_method_counts:
+                    payment_method_counts[method.name] += 1
+                else:
+                    payment_method_counts[method.name] = 1
+        
+        return JsonResponse({
+            'total_patients': total_patients,
+            'payment_method_counts': payment_method_counts,
+        })
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+
+def add_consultation_day_summary():
+    print("in consult")
+    try:
+        queue_date = NextConsultDate.objects.all().first().date
+        total_patients = Appointment.objects.filter(date=queue_date).count()
+
+        payment_method_counts = {}
+        appointments = Appointment.objects.filter(date=queue_date)
+
+        for appointment in appointments:
+            method = appointment.payment_method
+            if method:
+                if method.name in payment_method_counts:
+                    payment_method_counts[method.name] += 1
+                else:
+                    payment_method_counts[method.name] = 1
+        
+        consultation_day_summary = ConsultationDaySummary(
+            consultation_date = queue_date,
+            total_patients = total_patients,
+            payment_method_counts = payment_method_counts
+        )
+
+        print("aaa")
+
+        consultation_day_summary.save()
+        print(f"{consultation_day_summary.date} - {consultation_day_summary.total_patients} - {consultation_day_summary.payment_method_counts}")
+
+        return redirect("home")
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def finalize_queue_confirm(request):
+    add_consultation_day_summary()
+
+    today = datetime.today().date()
+    next_consult_date_obj = NextConsultDate.objects.first()
+    next_consult_date = next_consult_date_obj.date
+    appointments = Appointment.objects.filter(date=next_consult_date)
+
+    for appointment in appointments:
+        patient = appointment.patient
+        patient.last_appointment = next_consult_date
+        patient.save()
+
+    appointments.delete()
+
+    next_consult_date += timedelta(days=(2 - next_consult_date.weekday()) % 7)
+    if next_consult_date <= today:
+        next_consult_date += timedelta(days=7)
+
+    while next_consult_date.weekday() != 2:
+        next_consult_date += timedelta(days=1)
+
+    next_consult_date_obj.date = next_consult_date
+    next_consult_date_obj.save()
+
+    queue_state = QueueState.objects.all().first()
+    queue_state.is_started = False
+    queue_state.last_treated_appointment_id = None
+    queue_state.save()
+
+    return redirect('home')

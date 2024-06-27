@@ -1,4 +1,47 @@
+*{
+    font-family: "Nunito Sans", sans-serif;
+}
 
+button span{
+    font-weight: bold;
+}
+
+
+/* ============= Next Consult BTN ============== */
+.btn-new-consult-date {
+    color: inherit;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.btn-new-consult-date::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px; 
+    background-image: linear-gradient(to right, #878787, #ffffff); 
+    transition: background-color 0.3s, transform 0.3s ease-out;
+    transform: scaleX(1); 
+    transform-origin: bottom right;
+}
+
+.btn-new-consult-date:hover {
+    font-weight: 700;
+    color: #2196F3;
+}
+
+.btn-new-consult-date:hover::after {
+    background-image: linear-gradient(to right, #2196F3, #ffffff); 
+    background-color: transparent; 
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* ===================  BTN's ================== */
 
 .btn-svg{
     width: 1rem;
@@ -9,9 +52,83 @@
     fill: red;
 }
 
-/* =================== TABLE ================== */
+.btn-green{
+    background-color: #2c7b3f;
+    border: none;
+    box-shadow: none;
+
+    display: flex;
+    align-items: center;
+}
+
+.btn-blue{
+    background-color: #0B1A5E;
+}
+
+.btn-history-consult-day {
+    padding-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+}
+
+.btn-history-consult-day::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, white, #4D69EF, white);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.btn-history-consult-day:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* ===================  Bagdes ================== */
+
+.statistics-item{
+    background-color: #3B3F5C;
+    border-radius: 0.4em;
+    color: #E0E6ED;
+    font-weight: 700;
+
+    min-width: 8.4em;
+    height: 1em;
+    padding: 1em;
+
+    display: flex;
+    align-items: center;
+}
+
+.statistics-item span{
+    margin-left: 1em;
+    padding: 0.7em;
+    border-radius: 0.3em;
+    background-color: #E0E6ED;
+    color:#3B3F5C;
+
+    width: 2em;
+    height: 0.7em;
+    font-size: 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.statistics-item{
+    margin-left: 1em;
+}
+
+/* ================ TABLE =============== */
 .table-container {
-    max-height: 48rem; 
+    height: 48em;
     overflow-y: auto; 
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 0.5rem; 
@@ -49,6 +166,46 @@
     border: 3px solid #A8A8A8; 
 }
 
+.table-container {
+    width: 100%;
+}
+
+.table-container th, .table-container td {
+    height: 2.2rem; 
+    padding: 0;
+}
+
+.table-container th:first-child, .table-container td:first-child {
+    width: 7rem; 
+}
+
+.table-container .filled-cell {
+    background-color: white;
+    position: relative; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    border-radius: 0.35rem; 
+    width: 99%;
+    height: 80%;
+
+    border-top: 1.5px solid rgba(11, 26, 94, 0.6);
+    border-right: 1.5px solid rgba(11, 26, 94, 0.6);
+    border-left: 2px solid rgba(11, 26, 94, 0.6);
+    border-bottom: 2px solid rgba(11, 26, 94, 0.6);
+
+    font-weight: bold;
+    color: #5c5c5c;
+}
+
+.table-container .filled-cell > div {
+    position:absolute;
+    left: 0;
+    padding-left: 1rem;
+    top: 50%; 
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center; 
+}
+
 .btn-appointment{
     background-color: #0b1a5e;
     border: 1px solid #0b1a5e;
@@ -58,16 +215,78 @@
 /* ==================== SearchPanel ===================  */
 .appointment-date,
 .appointment-time {
-    font-size: 0.9rem; /* Tamanho menor para a data e hora */
+    font-size: 0.9rem; 
 }
 
 .patient-name {
-    width: 60%; /* Maior largura para a coluna do nome do paciente */
+    width: 60%;
 }
 
 .cancel-appointment {
-    padding: 0; /* Remova o preenchimento do botão para reduzir o tamanho */
-    margin: 0; /* Remova a margem do botão */
+    padding: 0; 
+    margin: 0; 
+}
+
+
+/* =================== HeaderQueue ================== */
+
+.consult-day-header h1{
+    font-size: 1.2rem;
+    color: #5c5c5c;
+}
+
+.consult-day-header #next-consult-date{
+    font-weight: 500;
+    color: #4361EE;
+    font-size: 1.2em;
+}
+
+
+/* =================== TableQueue ================== */
+
+.table-hover tbody tr.current-patient th:first-child {
+    background-color: #1280b7;
+}
+
+.table-hover tbody tr.current-patient .filled-cell {
+    background-color: #1280b7;
+    color: white; 
+}
+
+.table-hover tbody tr.current-patient .filled-cell:hover {
+    background-color: #15AEFDe6;
+    color: white; 
+}
+
+
+.table-hover tbody tr.current-patient td {
+    background-color: rgba(21, 174, 253, 0.2);
+    color: white;
+}
+
+.table-hover tbody tr.current-patient td:hover {
+    background-color: rgba(21, 174, 253, 0.2); 
+    color: white;
+}
+
+.current-patient-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Garante que ocupe todo o espaço disponível */
+    padding: 0 10px; /* Ajuste o padding conforme necessário */
+}
+
+.current-patient-name {
+    text-align: left;
+}
+
+.current-payment-method {
+    text-align: right;
 }
 
 /* ================ MESSAGES ==================== */
@@ -97,4 +316,55 @@
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
+}
+
+/* ============ HistoryModal ================== */
+.title-history-modal{
+    display: flex;
+    justify-content: center;
+}
+
+.card-container .panel{
+    padding: 0;
+}
+
+.card-custom-header {
+    font-size: 1rem;
+    font-weight: bold;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom: 1px solid transparent;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    background-color: #0B1A5E;
+    color: white;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.card-custom-body {
+    font-weight: bold;
+    padding: 1rem;
+    color: #E0E6ED;
+}
+
+.card-container {
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    max-height: 30rem;
+}
+
+.card-container .panel {
+    background-color: #f2f2f263;
+}
+
+.card-container .card {
+    margin-bottom: 1rem;
+}
+
+.card-container .card:last-child {
+    margin-bottom: 0;
 }
