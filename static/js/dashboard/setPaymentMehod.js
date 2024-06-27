@@ -3,6 +3,7 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     event.preventDefault();
     
     const formData = new FormData(this);
+    const appointmentId = formData.get('appointment_id');
 
     fetch(this.action, {
         method: 'POST',
@@ -24,7 +25,8 @@ document.getElementById('appointment-form').addEventListener('submit', function(
         if (option) {
             option.selected = true;
 
-            const currentPaymentMethodElement = document.querySelector('.current-payment-method');
+            const appointmentRow = document.querySelector(`tr[data-appointment-id="${appointmentId}"]`);
+            const currentPaymentMethodElement = appointmentRow.querySelector('.current-payment-method');
             if (currentPaymentMethodElement) {
                 currentPaymentMethodElement.textContent = option.textContent.trim();
             }
@@ -32,6 +34,6 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     })
     .catch(error => {
         console.error('Erro:', error);
-        alert('Erro ao atualizar os dados do paciente.');
+        alert('Erro:', error);
     });
 });
