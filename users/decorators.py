@@ -29,7 +29,7 @@ def user_is_receptionist(view_func):
         if user.is_authenticated:
             try:
                 db_user = User.objects.get(username=user.username)
-                if db_user.user_type == 'recepcionist':
+                if db_user.user_type == 'receptionist':
                     return view_func(request, *args, **kwargs)
                 else:
                     raise PermissionDenied

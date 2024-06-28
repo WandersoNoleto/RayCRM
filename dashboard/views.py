@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from .models import NextConsultDate, PaymentMethods
 from appointments.models import Appointment, ConsultationDaySummary
 from patients.models import Patient
@@ -80,6 +79,7 @@ def settings_view(request):
     return render(request, 'settings.html', context)
 
 
+@user_is_receptionist
 def add_payment_method(request):
     if request.method == "POST":
         name = request.POST.get("payment_method")
@@ -89,7 +89,7 @@ def add_payment_method(request):
 
         return redirect('settings')
 
-        
+@user_is_receptionist       
 def delete_payment_method(request, id):
     payment_method = get_object_or_404(PaymentMethods, id=id)
 
@@ -97,7 +97,7 @@ def delete_payment_method(request, id):
 
     return redirect('settings')
 
-
+@user_is_receptionist
 @require_GET
 def start_queue(request):
     try:
@@ -110,9 +110,9 @@ def start_queue(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+@user_is_receptionist
 @require_GET
 def update_last_treated_appointment(request, appointment_id):
-    print(f'Update_last_treated_appointment.......................{appointment_id}')
     try:
         queue_state, created = QueueState.objects.get_or_create()
         appointment = Appointment.objects.get(id=appointment_id)
@@ -126,6 +126,7 @@ def update_last_treated_appointment(request, appointment_id):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+@user_is_receptionist
 @require_GET
 def check_queue_state(request):
     try:
@@ -141,7 +142,7 @@ def check_queue_state(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-
+@user_is_receptionist
 def finalize_queue(request):
     try:
         queue_date = NextConsultDate.objects.all().first().date
@@ -165,7 +166,7 @@ def finalize_queue(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-
+@user_is_receptionist
 def add_consultation_day_summary():
     print("in consult")
     try:
@@ -199,6 +200,7 @@ def add_consultation_day_summary():
         return JsonResponse({'error': str(e)}, status=500)
 
 
+@user_is_receptionist
 def finalize_queue_confirm(request):
     add_consultation_day_summary()
 

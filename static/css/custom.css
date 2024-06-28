@@ -2,3 +2,46 @@
     width: 14rem;
     height: 4rem;
 }
+
+.active{
+    color: #fff !important; 
+    font-weight: bold !important;
+    background-color: #233053 !important; 
+}
+
+.btn-logout-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 1.5rem;
+
+    color: #888b9c87;
+
+    width: 100%;
+}
+
+.btn-logout{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.4rem 1rem;
+}
+
+.btn-logout svg{
+    fill: #888b9c87;
+}
+
+.btn-logout:hover{
+    background-color: #233053;
+    border-radius: 0.6rem;
+
+    color: #fff;
+
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.btn-logout:hover svg{
+    fill: #fff;
+}
