@@ -43,15 +43,15 @@ def search_appointments(request):
             se_appointments = Appointment.objects.filter(
                 date=search_date,
                 patient__name__icontains=search_name
-            )
+            ).order_by('time')
         elif search_date:
             se_appointments = Appointment.objects.filter(
                 date=search_date
-            )
+            ).order_by('time')
         elif search_name:
             se_appointments = Appointment.objects.filter(
                 patient__name__icontains=search_name
-            )
+            ).order_by('time')
 
     appointments_data = []
     for appointment in se_appointments:
