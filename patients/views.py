@@ -14,7 +14,7 @@ def add_patient(request):
             phone = data.get('phone')
             birth_date = data.get('birth_date')
             address = data.get('address')
-            clinic = request.user.clinic
+            clinic = request.user.receptionist.clinic
 
             print(name, phone, birth_date, address, clinic)
 

@@ -8,12 +8,13 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from .models import QueueState
 from datetime import datetime, timedelta, date
+from users.decorators import user_is_clinic, user_is_doctor, user_is_partner_optic, user_is_receptionist
 
-@login_required
+@user_is_receptionist
 def home(request):
     queue_state = request.session.get('queue_state', {'is_started': False})
     next_consult_date = NextConsultDate.objects.all().first()
-    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
+    patients = Patient.objects.filter(clinic=request.user.receptionist.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter(date=next_consult_date.date)
     payment_methods = PaymentMethods.objects.all()
     today_date = date.today()
@@ -33,16 +34,16 @@ def home(request):
     return render(request, 'index.html', context=context)
 
 
-@login_required
+@user_is_receptionist
 def view_patients(request):
-    patients = Patient.objects.filter(clinic=request.user.clinic).order_by(Lower('name'))
+    patients = Patient.objects.filter(clinic=request.user.receptionist.clinic).order_by(Lower('name'))
     context = {
         'patients': patients,
     }
 
     return render(request, 'patients.html', context=context)
 
-@login_required
+@user_is_receptionist
 def save_new_consult_date(request):
     if request.method == "POST":
         new_date = request.POST.get("nextConsultDate")
@@ -59,7 +60,7 @@ def save_new_consult_date(request):
 
         return redirect('home')
 
-@login_required
+@user_is_receptionist
 def get_next_consult_date(request):
     next_consult_date = NextConsultDate.objects.first()
     if next_consult_date:
@@ -68,7 +69,7 @@ def get_next_consult_date(request):
         return JsonResponse({'next_consult_date': None})
     
 
-@login_required
+@user_is_receptionist
 def settings_view(request):
     payment_methods = PaymentMethods.objects.all()
 
