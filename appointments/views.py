@@ -6,10 +6,8 @@ from patients.models import Patient
 from dashboard.models import NextConsultDate, PaymentMethods
 from django.contrib import messages
 from django.http import JsonResponse
-import json
 from django.db.models.functions import Lower
 from datetime import datetime
-from users.decorators import receptionist_required
 
 @login_required
 def add_appointment(request):
