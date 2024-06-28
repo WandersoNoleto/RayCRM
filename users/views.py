@@ -17,7 +17,10 @@ def login_check(request):
         print(user)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            if user.user_type == 'receptionist':
+                return redirect("home")
+            if user.user_type == 'doctor':
+                return redirect("doctor_view")
     
     return redirect("login")
 

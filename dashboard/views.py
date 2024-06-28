@@ -30,7 +30,7 @@ def home(request):
         'se_appointments': se_appointments,
         'consultation_day_summaries': consultation_day_summaries
     }
-    return render(request, 'index.html', context=context)
+    return render(request, 'receptionist/index.html', context=context)
 
 
 @user_is_receptionist
@@ -40,7 +40,7 @@ def view_patients(request):
         'patients': patients,
     }
 
-    return render(request, 'patients.html', context=context)
+    return render(request, 'receptionist/patients.html', context=context)
 
 @user_is_receptionist
 def save_new_consult_date(request):
@@ -76,7 +76,7 @@ def settings_view(request):
         'payment_methods': payment_methods
     }
 
-    return render(request, 'settings.html', context)
+    return render(request, 'receptionist/settings.html', context)
 
 
 @user_is_receptionist
@@ -232,3 +232,8 @@ def finalize_queue_confirm(request):
     queue_state.save()
 
     return redirect('home')
+
+
+@user_is_doctor
+def home_doctor(request):
+    return render (request, 'doctor/index.html')

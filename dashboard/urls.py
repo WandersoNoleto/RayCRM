@@ -15,4 +15,7 @@ urlpatterns = [
     path('settings/', views.settings_view, name="settings"),
     path('payment-methods/add', views.add_payment_method, name="add_payment_method"),
     path('payment-methods/delete/<int:id>/', views.delete_payment_method, name="delete_payment_method"),
+
+
+    path('doctor-view/',views.home_doctor, name="doctor_view")
 ]
