@@ -1,0 +1,110 @@
+body {
+  font-family: "Nunito Sans", sans-serif;
+  background-color: rgba(13, 17, 51, 0.9);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.auth-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card-image {
+  background-color: #06005a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 4rem;
+}
+
+.card-header{
+  padding: 2rem;
+}
+
+.card-head img{
+  width: 20rem;
+  height: 10rem;
+}
+
+.card-body {
+  padding: 0 3rem 3rem 3rem;
+  
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color:#4c5768;
+}
+
+.form-group label{
+  font-weight: bold;
+  color:#4c5768;
+}
+
+.btn-blue{
+  background-color: #06005a;
+  color: white;
+}
+
+.btn-blue:hover{
+  box-shadow: 0 1rem  1rem rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  color: white;
+}
+
+/* ===============ResgisterChoices====================== */
+
+.card-deck{
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.register-choice-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding:0;
+  max-width: 12rem ; 
+  height: 12rem;
+
+  border-radius: 1.7rem;
+  cursor: pointer;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.register-choice-btn svg{
+  width: 2.8rem;
+  height: 3rem;
+
+  fill: #4c5768
+}
+
+.register-choice-body{
+  margin-top: 2rem;
+  color: #4c5768;
+}
+
+
+.register-choice-btn:hover{
+  background-color: #06005a;
+  color: #fff;
+}
+
+.register-choice-btn:hover .register-choice-body{
+  background-color: #06005a;
+  color: #fff;
+}
+
+.register-choice-btn:hover svg{
+  fill: #fff;
+}
+
