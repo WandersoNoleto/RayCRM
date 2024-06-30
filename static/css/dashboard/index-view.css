@@ -111,6 +111,7 @@ button span{
 .statistics-item{
     border-radius: 0.4em;
     font-weight: 700;
+    font-size: 0.8rem;
 
     min-width: 8.4em;
     height: 1em;
