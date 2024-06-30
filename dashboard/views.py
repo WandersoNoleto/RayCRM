@@ -15,6 +15,8 @@ def home(request):
     next_consult_date = NextConsultDate.objects.all().first()
     patients = Patient.objects.filter(clinic=request.user.receptionist.clinic).order_by(Lower('name'))
     appointments = Appointment.objects.filter(date=next_consult_date.date)
+    appointments_type_c =  Appointment.objects.filter(date=next_consult_date.date).filter(type="Consulta").count()
+    appointments_type_r =  Appointment.objects.filter(date=next_consult_date.date).filter(type="Retorno").count()
     payment_methods = PaymentMethods.objects.all()
     today_date = date.today()
     se_appointments = request.session.pop('se_appointments', [])
@@ -25,6 +27,8 @@ def home(request):
         'queue_state': queue_state,
         'next_consult_date': next_consult_date,
         'appointments': appointments,
+        'appointments_type_c': appointments_type_c,
+        'appointments_type_r': appointments_type_r,
         'payment_methods': payment_methods,
         'today_date': today_date,
         'se_appointments': se_appointments,
@@ -167,7 +171,7 @@ def finalize_queue(request):
 
 
 @user_is_receptionist
-def add_consultation_day_summary():
+def add_consultation_day_summary(request):
     print("in consult")
     try:
         queue_date = NextConsultDate.objects.all().first().date
@@ -202,7 +206,7 @@ def add_consultation_day_summary():
 
 @user_is_receptionist
 def finalize_queue_confirm(request):
-    add_consultation_day_summary()
+    add_consultation_day_summary(request)
 
     today = datetime.today().date()
     next_consult_date_obj = NextConsultDate.objects.first()

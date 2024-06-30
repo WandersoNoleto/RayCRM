@@ -11,6 +11,7 @@ function updatePatientPanel(patientData) {
     const phoneInput = document.getElementById('phone');
     const paymentMethodSelect = document.getElementById('payment-method');
     const saveButton = document.getElementById('btn-save');
+    const deleteButton = document.getElementById('btn-delete-appointment');
 
     if (patientData) {
         idInput.value = patientData.id;
@@ -21,6 +22,7 @@ function updatePatientPanel(patientData) {
 
         paymentMethodSelect.disabled = false;
         saveButton.disabled = false;
+        deleteButton.disabled = false;
 
         const paymentMethodId = patientData.payment_method;
         if (paymentMethodId) {
