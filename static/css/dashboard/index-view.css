@@ -89,12 +89,27 @@ button span{
     left: 0;
 }
 
+.btn-delete-appointment{
+    background-color: #6d1f1f;
+    box-shadow: none;
+    width: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-appointment:hover{
+    background-color: #a82727;
+}
+
+.btn-delete-appointment svg path{
+    fill: #fff
+}
+
 /* ===================  Bagdes ================== */
 
 .statistics-item{
-    background-color: #3B3F5C;
     border-radius: 0.4em;
-    color: #E0E6ED;
     font-weight: 700;
 
     min-width: 8.4em;
@@ -103,14 +118,16 @@ button span{
 
     display: flex;
     align-items: center;
+
+    border-bottom: 2px solid #3B3F5C;
 }
 
 .statistics-item span{
     margin-left: 1em;
     padding: 0.7em;
     border-radius: 0.3em;
-    background-color: #E0E6ED;
-    color:#3B3F5C;
+    background-color: #3B3F5C;
+    color:white;
 
     width: 2em;
     height: 0.7em;
@@ -212,6 +229,25 @@ button span{
     color: white
 }
 
+.appointment-type {
+    position: relative; 
+    margin-left: 1rem;
+    font-weight: bold;
+    width: 3.625rem;
+}
+
+.appointment-type::before {
+    content: ''; 
+    position: absolute; 
+    left: -20%; 
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.3rem; 
+    height: 0.2rem; 
+    background-color: #000; 
+    border-radius: 4rem;
+}
+
 /* ==================== SearchPanel ===================  */
 .appointment-date,
 .appointment-time {
@@ -277,8 +313,8 @@ button span{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%; /* Garante que ocupe todo o espaço disponível */
-    padding: 0 10px; /* Ajuste o padding conforme necessário */
+    width: 100%; 
+    padding: 0 10px; 
 }
 
 .current-patient-name {
@@ -287,6 +323,11 @@ button span{
 
 .current-payment-method {
     text-align: right;
+    margin-right: 0.3rem;
+}
+
+.current-patient-info-stats{
+    display: flex;
 }
 
 /* ================ MESSAGES ==================== */

@@ -159,17 +159,33 @@
                                             <div class="mb-5">
                                                 <label for="patient">Paciente:</label>
                                                 <select name="patient" id="patient" name="patient" class="form-select" required>
-                                                    <option value="" selected disabled>Selecione um paciente</option>
-                                                    {% for patient in patients %}
-                                                        <option value="{{ patient.id }}" {% if patient.id == event.patient_id %}selected{% endif %}>{{ patient.name }}</option>
-                                                    {% endfor %}
+                                                    <div class="select-content">
+                                                        <option value="" selected disabled>Selecione um paciente</option>
+                                                        {% for patient in patients %}
+                                                            <option value="{{ patient.id }}" {% if patient.id == event.patient_id %}selected{% endif %}>{{ patient.name }}</option>
+                                                        {% endfor %}
+                                                    </div>
                                                 </select>
                                                 <div class="mt-2 text-danger" id="patientErr"></div>
+                                            </div>
+                                            <div class="mb-5">
+                                                <label for="appointment_type">Tipo de Consulta:</label>
+                                                <div class="flex items-center space-x-4">
+                                                    <div class="flex items-center cursor-pointer">
+                                                        <input type="radio" id="consulta" name="appointment_type" value="Consulta" required class="cursor-pointer" checked>
+                                                        <label for="consulta" class="ml-2 mt-2 cursor-pointer">Consulta</label>
+                                                    </div>
+                                                    <div class="flex items-center cursor-pointer">
+                                                        <input type="radio" id="retorno" name="appointment_type" value="Retorno" required class="cursor-pointer">
+                                                        <label for="retorno" class="ml-2  mt-2 ursor-pointer">Retorno</label>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-2 text-danger" id="consultationTypeErr"></div>
                                             </div>
                         
                                             <div class="mb-5">
                                                 <label for="dateStart">Data: </label>
-                                                <input name="date" id="dateStart" type="date" class="form-input" placeholder="" value="{{ next_consult_date}}" required>
+                                                <input name="date" id="dateStart" type="date" class="form-input cursor-pointer" placeholder="" value="{{ next_consult_date}}" required>
                                                 <div class="mt-2 text-danger" id="startDateErr"></div>
                                             </div>
                                             <div class="mb-5 flex items-center">
@@ -245,11 +261,14 @@
                             </div>
                             
                            
-                            <div class="mt-4 mb-5 ">
+                            <div class="mt-4 mb-7 ">
                                 <div class="flex justify-center mb-5 consult-day-header-statistics">
                                     <button type="button" class="statistics-item total">Agendados<span id="total-appointments">{{ appointments|length }}</span></button>
+                                    <button type="button" class="statistics-item ">Consultas<span >{{ appointments_type_c }}</span></button>
+                                    <button type="button" class="statistics-item ">Retornos<span >{{ appointments_type_r }}</span></button>
                                     <button type="button" class="statistics-item treated">Atendidos<span id="treated-count">0</span></button>
                                     <button type="button" class="statistics-item waiting">Aguardando<span id="waiting-count">{{ appointments|length }}</span></button>
+                                    
                                 </div>
                                 
                             </div>
@@ -261,7 +280,7 @@
                             <thead>
                                 <tr class="!bg-transparent dark:!bg-transparent">
                                     <th></th>
-                                    <th></th>
+                                    <th></th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -281,11 +300,16 @@
                                                         <div class="filled-cell">
                                                             <div class="current-patient-info">
                                                                 <span class="current-patient-name">{{ appointment.patient.name }}</span>
-                                                                <span class="current-payment-method">
-                                                                    {% if  appointment.payment_method is not None %}
-                                                                    {{ appointment.payment_method }}
-                                                                    {% endif %}
-                                                                </span>
+                                                                <div class="current-patient-info-stats">
+                                                                    <span class="current-payment-method">
+                                                                        {% if  appointment.payment_method is not None %}
+                                                                        {{ appointment.payment_method }}
+                                                                        {% endif %}
+                                                                    </span>
+                                                                    <div class="appointment-type">
+                                                                        {{ appointment.type }}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     {% else %}
@@ -309,12 +333,12 @@
             <div class="mt-6 xl:mt-0 ">
                 <div class="col-md-12">
                     <div class="panel mb-9 xl:w-full">
-                        <h3 class="mb-5 font-bold text-lg text-center">Dados do Paciente</h3>
+                        <h3 class="mb-5 font-bold text-lg text-center">Dados do Agendamento</h3>
                         <form id="appointment-form" method="POST" action="{% url 'save_appointment_payment_method' %}">
                             {% csrf_token %}
                             <input type="hidden" id="appointment-id" name="appointment_id" value="">
                             <div>
-                                <label for="name">Nome</label>
+                                <label for="name">Paciente</label>
                                 <input id="name" type="text" name="name" class="form-input" placeholder="Nenhum paciente selecionado" disabled>
                             </div>
                             <div class="mt-4">
@@ -346,6 +370,9 @@
                                         <path opacity="0.5" d="M7 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
                                     </svg>
                                     Salvar
+                                </button>
+                                <button type="button" id="btn-delete-appointment" class="btn w-full gap-2 btn-delete-appointment" title="Desmarcar atendimento" onclick="showCancelAlert(document.getElementById('appointment-id').value)" disabled >
+                                    <svg width="1rem" height="1rem" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M352 192V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64H96a32 32 0 0 1 0-64h256zm64 0h192v-64H416v64zM192 960a32 32 0 0 1-32-32V256h704v672a32 32 0 0 1-32 32H192zm224-192a32 32 0 0 0 32-32V416a32 32 0 0 0-64 0v320a32 32 0 0 0 32 32zm192 0a32 32 0 0 0 32-32V416a32 32 0 0 0-64 0v320a32 32 0 0 0 32 32z"/></svg>
                                 </button>
                             </div>
                         </form>

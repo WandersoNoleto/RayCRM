@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from .models import Appointment
 from patients.models import Patient
@@ -8,14 +7,16 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models.functions import Lower
 from datetime import datetime
+from users.decorators import user_is_receptionist
 
-@login_required
+@user_is_receptionist
 def add_appointment(request):
     if request.method == "POST":
         patient_id = request.POST.get("patient")
         date = request.POST.get("date")
         hour = request.POST.get("hour")
         minute = request.POST.get("minute")
+        appointment_type = request.POST.get("appointment_type")
 
         patient = get_object_or_404(Patient, id=patient_id)
 
@@ -26,13 +27,18 @@ def add_appointment(request):
             messages.error(request, "Não foi possível! Já existe um agendamento para esse horário, tente novamente")
             return redirect('home') 
 
-        appointment = Appointment(patient=patient, date=date, time=time_obj)
+        appointment = Appointment(
+            patient=patient, 
+            date=date, 
+            time=time_obj,
+            type=appointment_type  
+        )
         appointment.save()
 
         return redirect('home')
     
 
-@login_required
+@user_is_receptionist
 def search_appointments(request):
     search_date = request.GET.get('search-date')
     search_name = request.GET.get('search-name')
@@ -65,7 +71,7 @@ def search_appointments(request):
     request.session['se_appointments'] = appointments_data
     return redirect('home')
 
-@login_required
+@user_is_receptionist
 def cancel_appointment(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
     appointment.delete()
@@ -91,6 +97,7 @@ def get_appointment_data(request, appointment_id):
         return JsonResponse({'error': 'Appointment not found'}, status=404)
 
 @require_http_methods(["POST"])
+@user_is_receptionist
 def save_appointment_payment_method(request):
     if request.method == "POST":
         payment_method_id = request.POST.get("payment-method")
