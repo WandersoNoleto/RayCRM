@@ -6,7 +6,6 @@
 {% block "head" %}
     <link rel="stylesheet" href="{% static "css/dashboard/patients-view.css" %}">
 {% endblock "head" %}
-{% comment %} #TODO: Animação de loading enquanto carrega todos os registros {% endcomment %}
 
 {% block "content" %}
 {% if messages %}
@@ -18,11 +17,10 @@
     {% endfor %}
 </div>
 {% endif %}
-<div class="animate__animated p-6" :class="[$store.app.animation]">
+<div class="animate__animated p-6 mt-8 mr-8 ml-8" :class="[$store.app.animation]">
     <!-- start main "content" section -->
     <div x-data="pacients">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <h2 class="text-xl">Pacientes</h2>
+        <div class="flex flex-wrap items-center justify-end gap-4">
             <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                 <div class="flex gap-3">
                     <div>
@@ -86,7 +84,7 @@
             </div>
         </div>
 
-        <div class="panel mt-5 overflow-hidden border-0 p-0" x-data="contacts()">
+        <div class="panel mt-10 overflow-hidden border-0 p-0" x-data="contacts()">
             <div class="table-container">
                 <div class="table-responsive">
                     <table class="table">

@@ -74,7 +74,7 @@ document.getElementById('submitAppointmentForm').addEventListener('click', funct
     var dateInput = document.getElementById('dateStart').value;
     var date = new Date(dateInput);
 
-    fetch('/get_next_consult_date/')
+    fetch('/get-next-consult-date/')
         .then(response => response.json())
         .then(data => {
             var nextConsultDate = new Date(data.next_consult_date);

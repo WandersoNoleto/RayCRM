@@ -78,6 +78,14 @@ def cancel_appointment(request, appointment_id):
 
     return JsonResponse({'status': 'success'})
 
+@user_is_receptionist
+def set_missed_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    appointment.status = 'missed'
+    appointment.save()
+
+    return JsonResponse({'status': 'success'})
+
 @require_http_methods(["GET"]) 
 def get_appointment_data(request, appointment_id):
     try:

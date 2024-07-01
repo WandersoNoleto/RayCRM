@@ -1,0 +1,33 @@
+*{
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.form-input{
+    border: none;
+    border-bottom: 1px solid #e3e3e3;
+    font-size: 1.3rem;
+
+    font-weight: 500;
+
+    margin-bottom: 1.5rem;
+}
+
+.last-files-container{
+    height: 12rem !important;
+}
+
+.queue-panel{
+    margin-left: 2rem !important;
+    height: 26.3rem;
+}
+
+.next-button{
+    background-color: #0b1a5e;
+    border: none;
+
+    width: 10rem;
+}
+
+.mark-missed-link{
+    color: #f56a20 !important;
+}
