@@ -9,13 +9,10 @@
 {% block "title" %}Configurações{% endblock "title" %}
 
 {% block "content" %}
-<div class="animate__animated p-6" :class="[$store.app.animation]">
+<div class="animate__animated p-6 mt-10" :class="[$store.app.animation]">
     <!-- start main content section -->
     <div>
         <div class="pt-5">
-            <div class="mb-5 flex items-center justify-between">
-                <h5 class="text-lg font-semibold dark:text-white-light">Configurações</h5>
-            </div>
             <div x-data="{tab: 'home'}">
                 <ul class="mb-5 overflow-y-auto whitespace-nowrap border-b border-[#ebedf2] font-semibold dark:border-[#191e3a] sm:flex">
                     <li class="inline-block">

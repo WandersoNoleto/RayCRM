@@ -12,7 +12,7 @@ function updateButtonVisibility() {
 
 
 function finalizeQueue() {
-    fetch('/finalize_queue/', {
+    fetch('/finalize-queue/', {
         method: 'GET',
     })
     .then(response => {

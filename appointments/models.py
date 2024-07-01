@@ -7,10 +7,17 @@ class Appointment(models.Model):
         ('Retorno', 'Retorno'),
     ]
 
+    STATUS_CHOICES = [
+        ('attended', 'Attended'),
+        ('waiting', 'Waiting'),
+        ('missed', 'Missed'),
+    ]
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
     type = models.CharField(max_length=10, choices=APPOINTMENT_TYPE_CHOICES, default='Consulta')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='waiting')
     payment_method = models.ForeignKey('dashboard.PaymentMethods', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):

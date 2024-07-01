@@ -19,7 +19,8 @@ class NextConsultDate(models.Model):
 
     def __str__(self):
         return str(self.date)
-    
+
+
 class QueueState(models.Model):
     is_started = models.BooleanField(default=False)
     last_treated_appointment = models.ForeignKey(
@@ -28,6 +29,12 @@ class QueueState(models.Model):
         null=True,
         blank=True,
     )
+    total = models.IntegerField(default=0)
+    consultations = models.IntegerField(default=0)
+    follow_ups = models.IntegerField(default=0)
+    attendeds = models.IntegerField(default=0)
+    waiting = models.IntegerField(default=0)
+    misseds = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Queue State - Started: {self.is_started}"

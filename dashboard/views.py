@@ -21,10 +21,12 @@ def home(request):
     today_date = date.today()
     se_appointments = request.session.pop('se_appointments', [])
     consultation_day_summaries = ConsultationDaySummary.objects.all()
+    queue_state_stats = QueueState.objects.all().first()
 
     context = {
         'patients': patients,
         'queue_state': queue_state,
+        'queue_state_stats': queue_state_stats,
         'next_consult_date': next_consult_date,
         'appointments': appointments,
         'appointments_type_c': appointments_type_c,
@@ -66,6 +68,7 @@ def save_new_consult_date(request):
 @user_is_receptionist
 def get_next_consult_date(request):
     next_consult_date = NextConsultDate.objects.first()
+    print(next_consult_date)
     if next_consult_date:
         return JsonResponse({'next_consult_date': next_consult_date.date.strftime('%Y-%m-%d')})
     else:
@@ -116,13 +119,23 @@ def start_queue(request):
 
 @user_is_receptionist
 @require_GET
-def update_last_treated_appointment(request, appointment_id):
+def update_queue_stats(request, appointment_id):
     try:
         queue_state, created = QueueState.objects.get_or_create()
         appointment = Appointment.objects.get(id=appointment_id)
+        date_today = date.today()
+        appointment.status = 'attended'
+        appointment.save()
 
         queue_state.is_started = True
         queue_state.last_treated_appointment = appointment
+
+        queue_state.total = Appointment.objects.filter(date=date_today).count()
+        queue_state.consultations = Appointment.objects.filter(type='Consulta').filter(date=date_today).count()
+        queue_state.follow_ups = Appointment.objects.filter(type='Retorno').filter(date=date_today).count()
+        queue_state.attendeds = Appointment.objects.filter(status='attended').filter(date=date_today).count()
+        queue_state.waiting = Appointment.objects.filter(status='waiting').filter(date=date_today).count()
+        queue_state.misseds = Appointment.objects.filter(status='missed').filter(date=date_today).count()
 
         queue_state.save()
 
@@ -240,4 +253,16 @@ def finalize_queue_confirm(request):
 
 @user_is_doctor
 def home_doctor(request):
-    return render (request, 'doctor/index.html')
+    queue_state = QueueState.objects.all().first()
+    context = {}
+    print(queue_state.is_started)
+    if queue_state.is_started == True:
+        current_patient_id = queue_state.last_treated_appointment.patient.id
+        current_patient = Patient.objects.filter(id=current_patient_id).first()
+        context = {
+            'current_patient': current_patient,
+            'queue_state': queue_state
+        }
+
+    return render (request, 'doctor/index.html', context)
+    

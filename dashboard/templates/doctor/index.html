@@ -1,1 +1,237 @@
 {% extends "base-doctor.html" %}
+{% load static %}
+
+{% block "head" %}
+    <link rel="stylesheet" href="{% static "css/dashboard/index-view-doctor.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard/end-modal.css" %}">
+{% endblock "head" %}
+
+{% block "title" %}Início{% endblock "title" %}
+
+{% block "content" %}
+<div class="animate__animated p-6" :class="[$store.app.animation]">
+    <!-- start main content section -->
+    <div>
+        <div class="pt-5">
+            <div x-data="{tab: 'home'}">
+                <ul class="mb-5 overflow-y-auto whitespace-nowrap border-b border-[#ebedf2] font-semibold dark:border-[#191e3a] sm:flex">
+                    <li class="inline-block">
+                        <a href="javascript:;" class="flex gap-2 border-b border-transparent p-4 hover:border-primary hover:text-primary" :class="{'!border-primary text-primary' : tab == 'home'}" @click="tab='home'">
+                            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="6" r="4" fill="#1C274C"/>
+                                <path d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z" fill="#1C274C"/>
+                                </svg>
+                            Informações do paciente
+                        </a>
+                    </li>
+                    <li class="inline-block">
+                        <a href="javascript:;" class="flex gap-2 border-b border-transparent p-4 hover:border-primary hover:text-primary" :class="{'!border-primary text-primary' : tab == 'payment-details'}" @click="tab='payment-details'">
+                            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.50989 2.00001H15.49C15.7225 1.99995 15.9007 1.99991 16.0565 2.01515C17.1643 2.12352 18.0711 2.78958 18.4556 3.68678H5.54428C5.92879 2.78958 6.83555 2.12352 7.94337 2.01515C8.09917 1.99991 8.27741 1.99995 8.50989 2.00001Z" fill="#1C274C"/>
+                                <path d="M6.31052 4.72312C4.91989 4.72312 3.77963 5.56287 3.3991 6.67691C3.39117 6.70013 3.38356 6.72348 3.37629 6.74693C3.77444 6.62636 4.18881 6.54759 4.60827 6.49382C5.68865 6.35531 7.05399 6.35538 8.64002 6.35547L8.75846 6.35547L15.5321 6.35547C17.1181 6.35538 18.4835 6.35531 19.5639 6.49382C19.9833 6.54759 20.3977 6.62636 20.7958 6.74693C20.7886 6.72348 20.781 6.70013 20.773 6.67691C20.3925 5.56287 19.2522 4.72312 17.8616 4.72312H6.31052Z" fill="#1C274C"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.67239 7.54204H15.3276C18.7024 7.54204 20.3898 7.54204 21.3377 8.52887C22.2855 9.5157 22.0625 11.0403 21.6165 14.0896L21.1935 16.9811C20.8437 19.3724 20.6689 20.568 19.7717 21.284C18.8745 22 17.5512 22 14.9046 22H9.09536C6.44881 22 5.12553 22 4.22834 21.284C3.33115 20.568 3.15626 19.3724 2.80648 16.9811L2.38351 14.0896C1.93748 11.0403 1.71447 9.5157 2.66232 8.52887C3.61017 7.54204 5.29758 7.54204 8.67239 7.54204ZM8 18.0001C8 17.5859 8.3731 17.2501 8.83333 17.2501H15.1667C15.6269 17.2501 16 17.5859 16 18.0001C16 18.4144 15.6269 18.7502 15.1667 18.7502H8.83333C8.3731 18.7502 8 18.4144 8 18.0001Z" fill="#1C274C"/>
+                            </svg>
+                            Prontuário
+                        </a>
+                    </li>
+                </ul>
+                <template x-if="tab === 'home'">
+                    <div class="container mx-auto px-8">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="flex-1 lg:mr-4 mb-4 lg:mb-0">
+                                <div class="mb-8 rounded-md border border-[#ebedf2] bg-white p-4 pb-8 dark:border-[#191e3a] dark:bg-[#0e1726]">
+                                    <h6 class="mb-5 text-lg font-bold">Informações Gerais</h6>
+                                    <div class="flex flex-col sm:flex-row">
+                                        <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2">
+                                            <div>
+                                                <label for="name">Nome Completo</label>
+                                                <input id="name" type="text" placeholder="{{ current_patient.name }}" class="form-input" value="" disabled>
+                                            </div>
+                                            <div>
+                                                <label for="date">Idade</label>
+                                                <input id="date" type="text" placeholder="{{ current_patient.calculate_age }} anos" class="form-input" value="" disabled>
+                                            </div>
+                                            <div>
+                                                <label for="phone">Endereço</label>
+                                                <input id="phone" type="text" placeholder="{{ current_patient.address }}" class="form-input" disabled>
+                                            </div>
+                                            <div>
+                                                <label for="phone">Telefone</label>
+                                                <input id="phone" type="text" placeholder="{{ current_patient.formatted_phone }}" class="form-input" disabled>
+                                            </div>
+                                            <div>
+                                                <label for="date">Data de nascimento</label>
+                                                <input id="date" type="text" placeholder="{{ current_patient.birth_date|date:'d/m/Y' }} " class="form-input" value="" disabled>
+                                            </div>
+                                            <div>
+                                                <label for="phone">Último atendimento</label>
+                                                <input id="phone" type="text" placeholder=
+                                                {% if current_patient.last_appointment is not None %}
+                                                    "{{ current_patient.last_appointment|date:'d/m/Y' }}" 
+                                                {% else %}
+                                                    "Sem histórico de atendimento"
+                                                {% endif %}
+                                                class="form-input" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="queue-panel panel h-full ml-6">
+                                <div class="mb-5 flex items-center justify-between dark:text-white-light">
+                                    <h5 class="text-lg font-semibold">Atendimento</h5>
+                                </div>
+                                <div>
+                                    <div class="space-y-6">
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="1000" height="1000" rx="100" fill="#1C274C"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M266.789 400C266.789 317.157 333.946 250 416.789 250C499.632 250 566.789 317.157 566.789 400C566.789 482.843 499.632 550 416.789 550C333.946 550 266.789 482.843 266.789 400Z" fill="white"/>
+                                                <path d="M579.038 485.441C577.521 488.314 578.164 491.897 580.774 493.831C600.161 508.181 624.151 516.667 650.121 516.667C714.554 516.667 766.788 464.434 766.788 400.001C766.788 335.567 714.554 283.334 650.121 283.334C624.151 283.334 600.161 291.821 580.774 306.172C578.164 308.105 577.521 311.687 579.038 314.56C592.501 340.074 600.121 369.147 600.121 400.001C600.121 430.854 592.501 459.927 579.038 485.441Z" fill="white"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M254.827 606.644C295.905 588.814 349.803 583.334 416.787 583.334C483.828 583.334 537.765 588.824 578.858 606.694C623.622 626.157 650.828 659.311 665.088 706.121C671.772 728.061 655.292 750.001 632.582 750.001H201.055C178.318 750.001 161.803 728.027 168.507 706.047C182.786 659.231 210.034 626.087 254.827 606.644Z" fill="white"/>
+                                                <path d="M594.07 551.215C580.27 552.071 579.46 570.611 592.14 576.125C626.887 591.235 653.05 613.478 671.813 641.868C687.21 665.165 711.12 683.335 739.043 683.335H798.397C821.97 683.335 839.17 659.911 830.877 637.028C830.4 635.711 829.903 634.405 829.39 633.108C817.977 604.288 798.413 583.071 769.447 569.548C742.25 556.851 708.203 551.611 668.093 550.028L667.433 550.001H666.777C643.15 550.001 618.473 549.698 594.07 551.215Z" fill="white"/>
+                                                </svg>
+                                            <div class="px-3">
+                                                <div>Total</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base ltr:ml-auto rtl:mr-auto">{{queue_state.total}}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect width="1000" height="1000" rx="100" fill="#1C274C"/>
+                                                    <path d="M432.5 500C432.5 462.722 462.722 432.5 500 432.5C537.278 432.5 567.5 462.722 567.5 500C567.5 537.278 537.278 567.5 500 567.5C462.722 567.5 432.5 537.278 432.5 500Z" fill="white"/>
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M200 500C200 549.182 212.749 565.745 238.247 598.871C289.159 665.012 374.543 740 500 740C625.457 740 710.84 665.012 761.753 598.871C787.25 565.745 800 549.182 800 500C800 450.818 787.25 434.256 761.753 401.13C710.84 334.987 625.457 260 500 260C374.543 260 289.159 334.987 238.247 401.13C212.749 434.256 200 450.818 200 500ZM500 387.5C437.868 387.5 387.5 437.868 387.5 500C387.5 562.133 437.868 612.5 500 612.5C562.133 612.5 612.5 562.133 612.5 500C612.5 437.868 562.133 387.5 500 387.5Z" fill="white"/>
+                                            </svg>
+                                            <div class="flex-1 px-3">
+                                                <div>Consultas</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base ltr:ml-auto rtl:mr-auto">{{queue_state.consultations}}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="1000" height="1000" rx="100" fill="#1C274C"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M800 466.755V500.088C800 610.545 710.457 700.088 600 700.088L352.889 700.087L413.807 761.036L366.667 808.176L225.245 666.755L366.667 525.333L413.807 572.474L352.889 633.42L600 633.421C672.902 633.421 732.138 574.914 733.315 502.293L733.333 500.088L733.333 466.755H800ZM633.333 192L774.755 333.421L633.333 474.843L586.193 427.702L647.109 366.755H400C327.098 366.755 267.862 425.262 266.685 497.883L266.667 500.088L266.666 533.42H200V500.088C200 390.736 287.761 301.881 396.693 300.115L400 300.088L647.111 300.088L586.193 239.14L633.333 192Z" fill="white"/>
+                                            </svg>
+                                            <div class="flex-1 px-3">
+                                                <div>Retornos</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base  ltr:ml-auto rtl:mr-auto">{{queue_state.follow_ups}}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <rect x="0.5" y="0.5" width="999" height="999" rx="99.5" fill="#1C274C" stroke="white"/>
+                                                    <path d="M288 500.423L429.42 641.843L712.233 359" stroke="white" stroke-width="66.6667" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <div class="flex-1 px-3">
+                                                <div>Atendidos</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base  ltr:ml-auto rtl:mr-auto">{{queue_state.attendeds}}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="1000" height="1000" rx="100" fill="#1C274C"/>
+                                                <path d="M340.871 286.25C384.364 286.25 419.621 250.992 419.621 207.5C419.621 164.008 384.364 128.75 340.871 128.75C297.379 128.75 262.121 164.008 262.121 207.5C262.121 250.992 297.379 286.25 340.871 286.25Z" fill="white"/>
+                                                <path d="M587.121 534.375H454.621L418.996 356.875C397.746 264.375 267.746 291.875 281.496 382.5L322.746 588.75C328.996 620 353.996 646.875 393.371 646.875H562.746C562.746 646.875 562.746 779.375 562.746 834.375C562.746 893.75 645.871 893.75 645.871 835.625V593.75C645.871 565 625.871 534.375 587.121 534.375Z" fill="white"/>
+                                                <path d="M500.247 661.875H388.997C348.997 661.875 315.247 638.125 305.247 593.125L268.997 416.876C260.247 373.751 199.622 388.126 207.747 430.001L245.872 613.751C261.497 682.501 320.247 726.875 379.622 726.875H501.497C543.997 726.875 543.997 661.875 500.247 661.875Z" fill="white"/>
+                                                <path d="M665.246 120C595.246 120 538.371 176.875 538.371 246.875C538.371 316.875 595.246 373.75 665.246 373.75C735.246 373.75 792.121 316.875 792.121 246.875C792.121 177.5 735.246 120 665.246 120ZM665.246 350C608.371 350 562.121 303.75 562.121 246.875C562.121 190 608.371 143.75 665.246 143.75C722.121 143.75 768.371 190 768.371 246.875C767.746 303.75 721.496 350 665.246 350Z" fill="white"/>
+                                                <path d="M717.746 220.625L667.746 243.125V184.375C667.746 175 653.996 175.625 653.996 184.375V255C653.996 260 659.621 264.375 664.621 261.25L723.371 233.125C731.496 228.75 726.496 216.25 717.746 220.625Z" fill="white"/>
+                                            </svg>
+                                            </span>
+                                            <div class="flex-1 px-3">
+                                                <div>Esperando</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base  ltr:ml-auto rtl:mr-auto">{{queue_state.waiting}}</span>
+                                        </div>
+                                        <div class="flex">
+                                            <svg width="1.5rem" height="1.5rem" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="1000" height="1000" rx="100" fill="#1C274C"/>
+                                                <path d="M547.479 499.995L696.044 351.439C701.319 346.164 701.319 337.627 696.044 332.353L667.651 303.95C665.122 301.423 661.691 300 658.109 300C654.526 300 651.095 301.423 648.566 303.95L500 452.517L351.435 303.95C348.906 301.423 345.474 300 341.892 300C338.31 300 334.878 301.423 332.35 303.95L303.957 332.353C298.681 337.627 298.681 346.164 303.957 351.439L452.522 499.996L303.971 648.535C298.698 653.81 298.698 662.347 303.971 667.621L332.366 696.024C334.893 698.551 338.326 699.974 341.908 699.974C345.491 699.974 348.923 698.551 351.452 696.024L499.999 547.474L648.548 696.024C651.076 698.551 654.508 699.974 658.091 699.974C661.674 699.974 665.106 698.551 667.633 696.024L696.028 667.621C701.3 662.347 701.3 653.81 696.028 648.535L547.479 499.995Z" fill="white"/>
+                                                </svg>
+                                            </span>
+                                            <div class="flex-1 px-3">
+                                                <div>Faltaram</div>
+                                            </div>
+                                            <span class="whitespace-pre px-1 text-base  ltr:ml-auto rtl:mr-auto">{{queue_state.misseds}}</span>
+                                        </div>
+                                            <button type="button" class="btn btn-primary next-button" >
+                                                Próximo
+                                            </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="flex-1 lg:mr-4 ">
+                            <div class="mb-8 rounded-md border border-[#ebedf2] bg-white p-4 pb-8 dark:border-[#191e3a] dark:bg-[#0e1726]">
+                                <h6 class="mb-5 text-lg font-bold">Últimos arquivos</h6>
+                                <div class="flex flex-col sm:flex-row">
+                                    <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2">
+                                        <span>Não há resgistros de arquivos para esse paciente</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                            
+                </template>
+                
+                <template x-if="tab === 'payment-details'">
+                    <div>
+                        <div class="mb-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
+                            <div class="panel">
+                                <div class="mb-5">
+                                    <h5 class="mb-4 text-lg font-semibold">Métodos De Pagamento Aceitos</h5>
+                                </div>
+                                <form method="post" action="{% url "add_payment_method" %}">
+                                    {% csrf_token %}
+                                    <div class="mb-5 flex items-start">
+                                        <input type="text" name="payment_method" placeholder="Adicionar método" class="form-input">
+                                        <button type="submit" class="btn btn-primary ml-2">Adicionar</button>
+                                    </div>
+                                </form>
+                                <div class="mb-5 flex flex-wrap gap-2">
+                                    {% for method in payment_methods %}
+                                    <div class="flex justify-between align-center badge bg-dark p-2 rounded-full">
+                                        <div class="mr-2">
+                                            {{ method.name }}
+                                        </div>
+                                        <a href="{% url 'delete_payment_method' method.id %}">
+                                            x
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    <div class="modal status-page-modal{% if queue_state.is_started %} hidden{% endif %}" id="statusPageModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Atenção</h5>
+                </div>
+                <div class="modal-body ">
+                    <img src="{% static 'images/undraw_access_denied_re_awnf.svg' %}" alt="Acesso negado" class="img-fluid mb-3" style="max-width: 80%; height: auto;">
+                    <p>Atendimento ainda não foi iniciado, verifique a data ou fale com a atendente.</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn  next-button rounded " onclick="location.reload();" style="display: flex; align-items: center;">
+                        <span class="ml-2">Atualizar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<script src="{% static "js/dashboard/doctorPageMode.js" %}"></script>
+    <!-- end main content section -->
+
+
+
+{% endblock "content" %}

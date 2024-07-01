@@ -4,15 +4,16 @@ const treatedCountElement = document.getElementById('treated-count');
 const waitingCountElement = document.getElementById('waiting-count');
 
 const totalAppointments = parseInt(totalAppointmentsElement.innerText);
-let treatedCount = 0-1;
-let waitingCount = totalAppointments+1;
+let treatedCount = 0;
+let missedCount = 0;
+let waitingCount = totalAppointments;
 
 document.getElementById('treated-count').innerText = treatedCount;
 document.getElementById('waiting-count').innerText = waitingCount;
 
 
 function startConsultationDay() {
-    fetch('/start_queue/', {
+    fetch('/start-queue/', {
         method: 'GET',
     })
     .then(response => {
@@ -59,7 +60,7 @@ function highlightNextAppointment() {
             const appointmentId = appointmentRows[i].getAttribute('data-appointment-id');
             if (appointmentId) {
                 fetchPatientData(appointmentId);
-                fetch(`/update_last_treated_appointment/${appointmentId}/`, {
+                fetch(`/update-queue-stats/${appointmentId}/`, {
                     method: 'GET',
                 })
                 .then(response => {
@@ -143,6 +144,39 @@ function startHighlightFromAppointment(startAppointmentId) {
 
 function goToNextAppointment() {
     highlightNextAppointment();
+}
+
+function markAsMissed(appointmentId) {
+    console.log('Agendamento ID:', appointmentId); // Verifica o ID do agendamento
+
+    fetch(`/appointments/missed/${appointmentId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+        },
+        body: JSON.stringify({ 'appointment_id': appointmentId }),
+    })
+    .then(response => {
+        console.log('Resposta da API:', response); 
+        if (!response.ok) {
+            throw new Error('Erro na resposta da API');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Dados retornados:', data); 
+
+        if (data.status === 'success') {
+            const missedCountElement = document.getElementById('missed-count');
+            let missedCount = parseInt(missedCountElement.textContent);
+            missedCountElement.textContent = missedCount + 1;
+            console.log('Agendamento marcado como faltante.');
+        } else {
+            console.error('Erro ao marcar o agendamento como faltante:', data.error);
+        }
+    })
+    .catch(error => console.error('Erro na requisição:', error));
 }
 
 

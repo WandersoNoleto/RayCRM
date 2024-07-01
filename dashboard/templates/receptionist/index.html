@@ -43,7 +43,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/check_queue_state/')
+        fetch('/check-queue-state/')
             .then(response => response.json())
             .then(data => {
                 if (data.is_started == true && data.last_treated_appointment) {
@@ -63,8 +63,7 @@
 
 <div class="animate__animated p-6" :class="[$store.app.animation]">
     <div class="pt-5">
-        <div class="mb-5 flex items-center justify-between">
-            <h5 class="text-lg font-semibold dark:text-white-light">Consultas</h5>
+        <div class="mb-5 flex items-center justify-end">
             <span id="historyTrigger" class="text-primary mr-3 btn-history-consult-day" onclick="openHistoryModal()" style="cursor: pointer; display: flex; align-items: center;">
                 <svg width="1rem" height="1rem" viewBox="0 0 668 668" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-3">
                     <path d="M50.6667 250.667H617.333V600.667C617.333 605.087 615.577 609.326 612.452 612.452C609.326 615.577 605.087 617.333 600.667 617.333H67.3333C62.913 617.333 58.6738 615.577 55.5482 612.452C52.4226 609.326 50.6667 605.087 50.6667 600.667V250.667Z" fill="#4D69EF" stroke="#4D69EF" stroke-width="33.3333"/>
@@ -268,7 +267,7 @@
                                     <button type="button" class="statistics-item ">Retornos<span >{{ appointments_type_r }}</span></button>
                                     <button type="button" class="statistics-item treated">Atendidos<span id="treated-count">0</span></button>
                                     <button type="button" class="statistics-item waiting">Aguardando<span id="waiting-count">{{ appointments|length }}</span></button>
-                                    
+                                    <button type="button" class="statistics-item misseds">Faltaram<span id="missed-count">{{ queue_state_stats.misseds }}</span></button>
                                 </div>
                                 
                             </div>
@@ -338,7 +337,10 @@
                             {% csrf_token %}
                             <input type="hidden" id="appointment-id" name="appointment_id" value="">
                             <div>
-                                <label for="name">Paciente</label>
+                                <div class="flex justify-between items-center">
+                                    <label for="name" class="flex-1">Paciente</label>
+                                    <a href="#" id="mark-missed" class="text-500 hover:underline" onclick="markAsMissed(document.getElementById('appointment-id').value)">Não compareceu</a>
+                                </div>
                                 <input id="name" type="text" name="name" class="form-input" placeholder="Nenhum paciente selecionado" disabled>
                             </div>
                             <div class="mt-4">
