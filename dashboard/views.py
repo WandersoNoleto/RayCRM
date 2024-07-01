@@ -255,7 +255,7 @@ def finalize_queue_confirm(request):
 def home_doctor(request):
     queue_state = QueueState.objects.all().first()
     context = {}
-    
+    print(queue_state.is_started)
     if queue_state.is_started == True:
         current_patient_id = queue_state.last_treated_appointment.patient.id
         current_patient = Patient.objects.filter(id=current_patient_id).first()

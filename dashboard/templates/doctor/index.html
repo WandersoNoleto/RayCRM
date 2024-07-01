@@ -3,6 +3,7 @@
 
 {% block "head" %}
     <link rel="stylesheet" href="{% static "css/dashboard/index-view-doctor.css" %}">
+    <link rel="stylesheet" href="{% static "css/dashboard/end-modal.css" %}">
 {% endblock "head" %}
 
 {% block "title" %}Início{% endblock "title" %}
@@ -208,8 +209,29 @@
             </div>
         </div>
     </div>
+    <div class="modal status-page-modal{% if queue_state.is_started %} hidden{% endif %}" id="statusPageModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Atenção</h5>
+                </div>
+                <div class="modal-body ">
+                    <img src="{% static 'images/undraw_access_denied_re_awnf.svg' %}" alt="Acesso negado" class="img-fluid mb-3" style="max-width: 80%; height: auto;">
+                    <p>Atendimento ainda não foi iniciado, verifique a data ou fale com a atendente.</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn  next-button rounded " onclick="location.reload();" style="display: flex; align-items: center;">
+                        <span class="ml-2">Atualizar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<script src="{% static "js/dashboard/doctorPageMode.js" %}"></script>
     <!-- end main content section -->
 
-</div>
+
 
 {% endblock "content" %}

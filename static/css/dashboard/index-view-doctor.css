@@ -24,10 +24,36 @@
 .next-button{
     background-color: #0b1a5e;
     border: none;
+    color: white;
 
     width: 10rem;
 }
 
 .mark-missed-link{
     color: #f56a20 !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.status-page-modal{
+    background-color: rgba(0, 0, 0, 0.6) !important; 
+    backdrop-filter: blur(5px);
+}
+
+.status-page-modal .modal-header{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+}
+
+.status-page-modal .modal-body{
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center !important;
+    align-items: center !important;
+
+    font-weight: bold;
 }
