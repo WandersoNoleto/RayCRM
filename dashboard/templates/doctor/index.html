@@ -31,12 +31,12 @@
                                 <path d="M6.31052 4.72312C4.91989 4.72312 3.77963 5.56287 3.3991 6.67691C3.39117 6.70013 3.38356 6.72348 3.37629 6.74693C3.77444 6.62636 4.18881 6.54759 4.60827 6.49382C5.68865 6.35531 7.05399 6.35538 8.64002 6.35547L8.75846 6.35547L15.5321 6.35547C17.1181 6.35538 18.4835 6.35531 19.5639 6.49382C19.9833 6.54759 20.3977 6.62636 20.7958 6.74693C20.7886 6.72348 20.781 6.70013 20.773 6.67691C20.3925 5.56287 19.2522 4.72312 17.8616 4.72312H6.31052Z" fill="#1C274C"/>
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.67239 7.54204H15.3276C18.7024 7.54204 20.3898 7.54204 21.3377 8.52887C22.2855 9.5157 22.0625 11.0403 21.6165 14.0896L21.1935 16.9811C20.8437 19.3724 20.6689 20.568 19.7717 21.284C18.8745 22 17.5512 22 14.9046 22H9.09536C6.44881 22 5.12553 22 4.22834 21.284C3.33115 20.568 3.15626 19.3724 2.80648 16.9811L2.38351 14.0896C1.93748 11.0403 1.71447 9.5157 2.66232 8.52887C3.61017 7.54204 5.29758 7.54204 8.67239 7.54204ZM8 18.0001C8 17.5859 8.3731 17.2501 8.83333 17.2501H15.1667C15.6269 17.2501 16 17.5859 16 18.0001C16 18.4144 15.6269 18.7502 15.1667 18.7502H8.83333C8.3731 18.7502 8 18.4144 8 18.0001Z" fill="#1C274C"/>
                             </svg>
-                            Prontuário
+                            Registros Médicos
                         </a>
                     </li>
                 </ul>
                 <template x-if="tab === 'home'">
-                    <div class="container mx-auto px-8">
+                    <div class="containerpx-8">
                         <div class="flex flex-col lg:flex-row">
                             <div class="flex-1 lg:mr-4 mb-4 lg:mb-0">
                                 <div class="mb-8 rounded-md border border-[#ebedf2] bg-white p-4 pb-8 dark:border-[#191e3a] dark:bg-[#0e1726]">
@@ -154,8 +154,8 @@
                                             </div>
                                             <span class="whitespace-pre px-1 text-base  ltr:ml-auto rtl:mr-auto">{{queue_state.misseds}}</span>
                                         </div>
-                                            <button type="button" class="btn btn-primary next-button" >
-                                                Próximo
+                                            <button type="button" class="btn btn-primary next-button" onclick="location.reload();">
+                                                Atualizar
                                             </button>
                                     </div>
                                 </div>
@@ -177,30 +177,73 @@
                 </template>
                 
                 <template x-if="tab === 'payment-details'">
-                    <div>
-                        <div class="mb-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
-                            <div class="panel">
-                                <div class="mb-5">
-                                    <h5 class="mb-4 text-lg font-semibold">Métodos De Pagamento Aceitos</h5>
-                                </div>
-                                <form method="post" action="{% url "add_payment_method" %}">
-                                    {% csrf_token %}
-                                    <div class="mb-5 flex items-start">
-                                        <input type="text" name="payment_method" placeholder="Adicionar método" class="form-input">
-                                        <button type="submit" class="btn btn-primary ml-2">Adicionar</button>
-                                    </div>
-                                </form>
-                                <div class="mb-5 flex flex-wrap gap-2">
-                                    {% for method in payment_methods %}
-                                    <div class="flex justify-between align-center badge bg-dark p-2 rounded-full">
-                                        <div class="mr-2">
-                                            {{ method.name }}
-                                        </div>
-                                        <a href="{% url 'delete_payment_method' method.id %}">
-                                            x
-                                        </a>
-                                    </div>
-                                {% endfor %}
+                    <div class="containerpx-8">
+                    
+                        <div class="flex justify-start mb-4">
+                            <div class="dropdown-container">
+                                <button class="btn btn-primary dropdown-toggle add-record-button" type="button" id="addRecordDropdown">
+                                    Adicionar Documento
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Receituário</a></li>
+                                    <li><a class="dropdown-item" href="#">Receita Visão Simples</a></li>
+                                    <li><a class="dropdown-item" href="#">Receita Progressiva</a></li>
+                                    <li><a id="free-doc" class="dropdown-item" href="#">Documento livre</a></li>
+                                </ul>
+                            </div>
+   
+                        </div>
+                        
+                        
+                        <div class="panel mt-10 overflow-hidden border-0 p-0" x-data="contacts()">
+
+                            <div class="table-container">
+                                <div class="table-responsive">
+                                    <table class="table medical-records-table">
+                                        <thead class="medical-records-table-thead">
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Data</th>
+                                                <th>Tamanho</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% if medical_records %}
+                                                {% for file in medical_records %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="flex w-max items-center">
+                                                            <div class="grid h-8 w-8 place-content-center rounded-full bg-blue text-sm font-semibold text-white ltr:mr-2 rtl:ml-2">
+                                                                {{ file.name|slice:":1"|capfirst }}
+                                                            </div>
+                                                            <div>{{ file.name }}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="whitespace-nowrap">{{ file.date_added }}</td>
+                                                    <td class="whitespace-nowrap">{{ file.file_size }} KB</td>
+                                                    <td>
+                                                        <div class="flex justify-start">
+                                                            <button type="button" class="btn btn-sm btn-outline-primary">
+                                                                Editar
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                                Apagar
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="4" class="text-center">
+                                                    Nenhum registro médico encontrado.
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -227,11 +270,75 @@
             </div>
         </div>
     </div>
-    
-
-<script src="{% static "js/dashboard/doctorPageMode.js" %}"></script>
+    <div class="modal hidden" id="addDocumentModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Documento Livre</h5>
+                    <button type="button" class="btn-close" onclick="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDocumentForm">
+                        <div class="mb-3">
+                            <label for="fileName" class="form-label">Nome do Arquivo</label>
+                            <input type="text" class="form-control" id="fileName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fileContent" class="form-label">Conteúdo do Documento</label>
+                            <textarea class="form-control" id="fileContent" rows="10" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const documentFreeLink = document.getElementById('free-doc');
+            const addDocumentModal = document.getElementById('addDocumentModal');
+            console.log(documentFreeLink)
+            if (documentFreeLink && addDocumentModal) {
+                documentFreeLink.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    addDocumentModal.classList.remove('hidden');
+                });
+            }
+        
+            document.getElementById('addDocumentForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+        
+                const fileName = document.getElementById('fileName').value;
+                const fileContent = document.getElementById('fileContent').value;
+        
+                fetch('/create-pdf/', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    },
+                    body: JSON.stringify({
+                        file_name: fileName,
+                        file_content: fileContent,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closeModal();
+                        alert('Documento criado com sucesso!');
+                    } else {
+                        alert('Erro ao criar o documento: ' + data.error);
+                    }
+                })
+                .catch(error => console.error('Erro na requisição:', error));
+            });
+        });
+        
+        function closeModal() {
+            document.getElementById('addDocumentModal').classList.add('hidden');
+        }
+        
+    </script>
     <!-- end main content section -->
-
-
-
 {% endblock "content" %}

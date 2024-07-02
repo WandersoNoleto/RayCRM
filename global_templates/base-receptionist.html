@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block "link_logo" %}{% url "home" %}{% endblock "link_logo" %}
+
 {% block "sidebar" %}
 <li class="nav-item">
     <a href="{% url "home" %}" class="group {% if request.path == '/' or request.path == '/appointments/search/' %} active {% endif %}">

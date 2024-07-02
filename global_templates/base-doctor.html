@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block "link_logo" %}{% url "doctor_view" %}{% endblock "link_logo" %}
+
+{% block "head" %}
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+{% endblock "head" %}
 
 {% block "sidebar" %}
 <li class="nav-item">

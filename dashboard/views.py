@@ -8,6 +8,7 @@ from django.views.decorators.http import require_GET
 from .models import QueueState
 from datetime import datetime, timedelta, date
 from users.decorators import user_is_clinic, user_is_doctor, user_is_partner_optic, user_is_receptionist
+from medical_records.models import MedicalRecord
 
 @user_is_receptionist
 def home(request):
@@ -255,13 +256,17 @@ def finalize_queue_confirm(request):
 def home_doctor(request):
     queue_state = QueueState.objects.all().first()
     context = {}
-    print(queue_state.is_started)
+
     if queue_state.is_started == True:
         current_patient_id = queue_state.last_treated_appointment.patient.id
         current_patient = Patient.objects.filter(id=current_patient_id).first()
+
+        medical_records = MedicalRecord.objects.filter(id=current_patient.id)
+
         context = {
             'current_patient': current_patient,
-            'queue_state': queue_state
+            'queue_state': queue_state,
+            'medical_records': medical_records
         }
 
     return render (request, 'doctor/index.html', context)

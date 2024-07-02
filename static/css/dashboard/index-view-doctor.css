@@ -5,7 +5,7 @@
 .form-input{
     border: none;
     border-bottom: 1px solid #e3e3e3;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 
     font-weight: 500;
 
@@ -18,7 +18,7 @@
 
 .queue-panel{
     margin-left: 2rem !important;
-    height: 26.3rem;
+    height: 25rem;
 }
 
 .next-button{
@@ -54,6 +54,68 @@
     flex-direction: column;
     justify-content: center !important;
     align-items: center !important;
+
+    font-weight: bold;
+}
+
+/* =============== Dropdown ===================== */
+
+.add-record-button{
+    background-color: #0b1a5e;
+    border: none;
+    color: white;
+
+    width: 14rem;
+}
+/* Estilo básico para o container do dropdown */
+.dropdown-container {
+    position: relative; /* Para garantir que o menu dropdown esteja posicionado corretamente */
+}
+
+/* Estilo básico para o menu dropdown */
+.dropdown-menu {
+    display: none; /* Inicialmente oculto */
+    position: absolute; /* Para posicionar o menu corretamente */
+    background-color: white; /* Fundo branco para o menu */
+    border: 1px solid #ddd; /* Borda leve para o menu */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra para o menu */
+    padding: 0;
+    margin: 0;
+    list-style: none; /* Remove as marcas de lista */
+    z-index: 1000; /* Garante que o menu fique sobre outros elementos */
+    opacity: 0; /* Inicialmente invisível */
+    visibility: hidden; /* Inicialmente invisível */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Transição suave */
+}
+
+/* Exibe o menu dropdown quando o botão ou o menu é hoverado */
+.dropdown-container:hover .dropdown-menu {
+    display: block;
+    opacity: 1; /* Totalmente visível */
+    visibility: visible; /* Totalmente visível */
+}
+
+/* Estilo para itens do menu */
+.dropdown-item {
+    display: block;
+    padding: 8px 16px; /* Espaçamento interno */
+    color: #333; /* Cor do texto */
+    text-decoration: none; /* Remove o sublinhado dos links */
+}
+
+/* Estilo para itens do menu quando são hoverados */
+.dropdown-item:hover {
+    background-color: #f1f1f1; /* Fundo cinza claro ao passar o mouse */
+    color: #000; /* Cor do texto ao passar o mouse */
+}
+
+
+
+/* =============== Table ===================== */
+
+.medical-records-table-thead th{
+    background: #c1c5d7 !important;
+    color: #000;
 
     font-weight: bold;
 }
